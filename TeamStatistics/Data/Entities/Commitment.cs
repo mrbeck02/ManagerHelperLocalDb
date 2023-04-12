@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace TeamStatistics.Data.Entities
 {
-    public class WeatherForecast
+    public class Commitment
     {
         [Key]
         public Guid Id { get; set; }
 
-        public DateTime Date { get; set; }
+        #region Relationships
 
-        public int TemperatureC { get; set; }
+        public Guid SprintId { get; set; }
 
+        public virtual Sprint Sprint { get; set; }
+
+        #endregion
     }
 }
