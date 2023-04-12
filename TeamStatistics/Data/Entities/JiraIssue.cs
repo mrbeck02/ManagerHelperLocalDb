@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace TeamStatistics.Data.Entities
 {
-    public class Commitment
+    public class JiraIssue
     {
         [Key]
         public Guid Id { get; set; }
 
-        public bool DidComplete { get; set; }
+        public string Number { get; set; } = "";// 14354
 
-        public bool IncludeInData { get; set; }
+        public int StoryPoints { get; set; }
 
-        public bool WasInitiallyCommitted { get; set; }
+        public bool IsRegressionBug { get; set; }
 
         public DateTime DateCreatedUtc { get; set; }
 
@@ -24,20 +24,15 @@ namespace TeamStatistics.Data.Entities
 
         public string TimeZone { get; set; } = "";
 
-
         #region Relationships
 
-        public Guid SprintId { get; set; }
+        public Guid JiraProjectId { get; set; }
 
-        public virtual Sprint Sprint { get; set; }
+        public virtual JiraProject JiraProject { get; set; }
 
-        public Guid JiraIssueId { get; set; }
+        public int ProductId { get; set; }
 
-        public virtual JiraIssue JiraIssue { get; set; }
-
-        public Guid DeveloperId { get; set; }
-
-        public virtual Developer Developer { get; set; }
+        public virtual Product Product { get; set; }
 
         #endregion
     }

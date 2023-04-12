@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamStatistics.Data.Entities
 {
-    public class Commitment
+    public class JiraSupportIssue
     {
         [Key]
         public Guid Id { get; set; }
-
-        public bool DidComplete { get; set; }
-
-        public bool IncludeInData { get; set; }
 
         public bool WasInitiallyCommitted { get; set; }
 
@@ -40,5 +32,6 @@ namespace TeamStatistics.Data.Entities
         public virtual Developer Developer { get; set; }
 
         #endregion
+
     }
 }

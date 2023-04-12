@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TeamStatistics.Data.Entities;
 
 namespace TeamStatistics.Data
@@ -14,7 +9,19 @@ namespace TeamStatistics.Data
         public DbSet<Quarter> Quarters { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
 
+        public DbSet<Entry> Entries { get; set; }
+
+        public DbSet<Commitment> Commitments { get; set; }
+
+        public DbSet<JiraIssue> JiraIssues { get; set; }
+
+        public DbSet<JiraProject> JiraProjects { get; set; }
+
         public DbSet<Developer> Developers { get; set; }
+
+        public DbSet<Product> Products { get; set; }
+
+        public DbSet<JiraSupportIssue> JiraSupportIssues { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) 
         {
@@ -34,6 +41,22 @@ namespace TeamStatistics.Data
                     new IssueStatus { Id = (int)IssueStatusEnum.done, Name = "Done" },
                     new IssueStatus { Id = (int)IssueStatusEnum.todo, Name = "To Do" }
                     );
+
+            modelBuilder.Entity<Product>().HasData(
+                new Product { Id = (int)ProductEnum.CARA, Name = "CARA" },
+                new Product { Id = (int)ProductEnum.CM, Name = "Crisis Management" },
+                new Product { Id = (int)ProductEnum.CRT, Name = "Critical Resource Tracker" },
+                new Product { Id = (int)ProductEnum.EPMM, Name = "EPMM" },
+                new Product { Id = (int)ProductEnum.PPS, Name = "OpenBeds" },
+                new Product { Id = (int)ProductEnum.PFS, Name = "Treatment Connection" },
+                new Product { Id = (int)ProductEnum.SMARTonFHIR, Name = "SMART on FHIR" },
+                new Product { Id = (int)ProductEnum.AvailabilityAPI, Name = "Availability API" },
+                new Product { Id = (int)ProductEnum.ReferralAPI, Name = "Referral API" },
+                new Product { Id = (int)ProductEnum.Cognito, Name = "Cognito" },
+                new Product { Id = (int)ProductEnum.Launcher, Name = "Launcher" },
+                new Product { Id = (int)ProductEnum.Dynatrace, Name = "Dynatrace" },
+                new Product { Id = (int)ProductEnum.Other, Name = "Other" }
+            );
 
         }
     }
