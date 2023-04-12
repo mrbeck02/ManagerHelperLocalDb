@@ -11,7 +11,7 @@ using TeamStatistics.Data;
 namespace TeamStatistics.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230412121717_Initial")]
+    [Migration("20230412122000_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -42,6 +42,10 @@ namespace TeamStatistics.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<Guid>("JiraIssueId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("SprintId")

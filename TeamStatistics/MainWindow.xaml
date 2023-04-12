@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TeamStatistics"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="MainViewModel">
     <Grid>
-
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="Import" Padding="10,2" Command="{Binding ImportCsvCommand}" />
+            <TextBox Margin="10,0" Width="300" Text="{Binding CsvPath, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
     </Grid>
 </Window>

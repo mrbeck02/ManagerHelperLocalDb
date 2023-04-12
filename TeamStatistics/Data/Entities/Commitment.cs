@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TeamStatistics.Data.Entities
 {
@@ -17,6 +13,8 @@ namespace TeamStatistics.Data.Entities
         public bool IncludeInData { get; set; }
 
         public bool WasInitiallyCommitted { get; set; }
+
+        public string Notes { get; set; } // Notes about the commitment and why it might not have been completed
 
         public DateTime DateCreatedUtc { get; set; }
 

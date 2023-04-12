@@ -41,6 +41,10 @@ namespace TeamStatistics.Migrations
                     b.Property<Guid>("JiraIssueId")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("SprintId")
                         .HasColumnType("TEXT");
 

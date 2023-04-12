@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TeamStatistics.Data;
 using TeamStatistics.Data.Entities;
+using TeamStatistics.ViewModels;
 
 namespace TeamStatistics
 {
@@ -22,10 +23,10 @@ namespace TeamStatistics
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow(DataContext dbContext)
+        public MainWindow(IMainViewModel mainViewModel)
         {
-            dbContext.IssueStatuses.Add(new IssueStatus() { Id = 1, Name = "Open" });
             InitializeComponent();
+            DataContext = mainViewModel;
         }
     }
 }

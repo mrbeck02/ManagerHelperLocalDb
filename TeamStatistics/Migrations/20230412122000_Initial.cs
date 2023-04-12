@@ -141,6 +141,7 @@ namespace TeamStatistics.Migrations
                     DidComplete = table.Column<bool>(type: "INTEGER", nullable: false),
                     IncludeInData = table.Column<bool>(type: "INTEGER", nullable: false),
                     WasInitiallyCommitted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Notes = table.Column<string>(type: "TEXT", nullable: false),
                     DateCreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TimeZone = table.Column<string>(type: "TEXT", nullable: false),

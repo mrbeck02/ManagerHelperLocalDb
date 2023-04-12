@@ -12,6 +12,7 @@ namespace TeamStatistics.Data.Entities
 
         public bool IsHoliday { get; set; }
 
+
         public DateTime DateCreatedUtc { get; set; }
 
         public DateTime DateModifiedUtc { get; set; }

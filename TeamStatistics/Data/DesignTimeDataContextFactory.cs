@@ -7,9 +7,9 @@ namespace TeamStatistics.Data
     /// Design time DataContext factory used when creating migrations
     /// Credit: https://learn.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli
     /// </summary>
-    internal class DataContextFactory : IDbContextFactory<DataContext>
+    internal class DesignTimeDataContextFactory : IDesignTimeDbContextFactory<DataContext>
     {
-        public DataContext CreateDbContext()
+        public DataContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             optionsBuilder.UseSqlite("Data Source=c:\\Temp\\mydb.db");
