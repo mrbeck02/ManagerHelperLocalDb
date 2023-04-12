@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TeamStatistics.Data.Entities
@@ -26,9 +27,7 @@ namespace TeamStatistics.Data.Entities
 
         public virtual JiraProject JiraProject { get; set; }
 
-        public int ProductId { get; set; }
-
-        public virtual Product Product { get; set; }
+        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
 
         #endregion
     }

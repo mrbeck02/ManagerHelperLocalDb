@@ -17,6 +17,21 @@ namespace TeamStatistics.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
+            modelBuilder.Entity("JiraIssueProduct", b =>
+                {
+                    b.Property<Guid>("JiraIssuesId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("JiraIssuesId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("JiraIssueProduct");
+                });
+
             modelBuilder.Entity("TeamStatistics.Data.Entities.Commitment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -205,9 +220,6 @@ namespace TeamStatistics.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("StoryPoints")
                         .HasColumnType("INTEGER");
 
@@ -218,8 +230,6 @@ namespace TeamStatistics.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("JiraProjectId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("JiraIssues");
                 });
@@ -411,6 +421,21 @@ namespace TeamStatistics.Migrations
                     b.ToTable("Sprints");
                 });
 
+            modelBuilder.Entity("JiraIssueProduct", b =>
+                {
+                    b.HasOne("TeamStatistics.Data.Entities.JiraIssue", null)
+                        .WithMany()
+                        .HasForeignKey("JiraIssuesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeamStatistics.Data.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TeamStatistics.Data.Entities.Commitment", b =>
                 {
                     b.HasOne("TeamStatistics.Data.Entities.Developer", "Developer")
@@ -465,15 +490,7 @@ namespace TeamStatistics.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TeamStatistics.Data.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("JiraProject");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraSupportIssue", b =>

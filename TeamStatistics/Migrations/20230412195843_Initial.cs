@@ -92,8 +92,7 @@ namespace TeamStatistics.Migrations
                     DateCreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     DateModifiedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     TimeZone = table.Column<string>(type: "TEXT", nullable: false),
-                    JiraProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false)
+                    JiraProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,12 +101,6 @@ namespace TeamStatistics.Migrations
                         name: "FK_JiraIssues_JiraProjects_JiraProjectId",
                         column: x => x.JiraProjectId,
                         principalTable: "JiraProjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JiraIssues_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -129,6 +122,30 @@ namespace TeamStatistics.Migrations
                         name: "FK_Sprints_Quarters_QuarterId",
                         column: x => x.QuarterId,
                         principalTable: "Quarters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JiraIssueProduct",
+                columns: table => new
+                {
+                    JiraIssuesId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JiraIssueProduct", x => new { x.JiraIssuesId, x.ProductsId });
+                    table.ForeignKey(
+                        name: "FK_JiraIssueProduct_JiraIssues_JiraIssuesId",
+                        column: x => x.JiraIssuesId,
+                        principalTable: "JiraIssues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JiraIssueProduct_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -298,14 +315,14 @@ namespace TeamStatistics.Migrations
                 column: "IssueStatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_JiraIssueProduct_ProductsId",
+                table: "JiraIssueProduct",
+                column: "ProductsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_JiraIssues_JiraProjectId",
                 table: "JiraIssues",
                 column: "JiraProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JiraIssues_ProductId",
-                table: "JiraIssues",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JiraSupportIssues_DeveloperId",
@@ -335,6 +352,9 @@ namespace TeamStatistics.Migrations
                 name: "Entries");
 
             migrationBuilder.DropTable(
+                name: "JiraIssueProduct");
+
+            migrationBuilder.DropTable(
                 name: "JiraSupportIssues");
 
             migrationBuilder.DropTable(
@@ -342,6 +362,9 @@ namespace TeamStatistics.Migrations
 
             migrationBuilder.DropTable(
                 name: "IssueStatuses");
+
+            migrationBuilder.DropTable(
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Developers");
@@ -354,9 +377,6 @@ namespace TeamStatistics.Migrations
 
             migrationBuilder.DropTable(
                 name: "JiraProjects");
-
-            migrationBuilder.DropTable(
-                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Quarters");

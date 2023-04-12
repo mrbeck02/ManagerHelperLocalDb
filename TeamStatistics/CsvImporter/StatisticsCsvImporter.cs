@@ -21,6 +21,9 @@ namespace TeamStatistics.CsvImporter
 
                 foreach (var csvEntry in csvEntries) 
                 {
+                    // Each row is a commitment that was made.  
+                    //var commitment = new Commitment();
+                    //commitment.
                 }
             }
         }
