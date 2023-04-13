@@ -17,7 +17,7 @@ namespace TeamStatistics.Data.Entities
 
         #region Relationships
 
-        public virtual ICollection<JiraIssue> JiraIssues { get; set; } = new HashSet<JiraIssue>();
+        public virtual ICollection<JiraIssue> JiraIssues { get; set; } = new List<JiraIssue>();
 
         #endregion
     }

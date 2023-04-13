@@ -27,7 +27,7 @@ namespace TeamStatistics.Data.Entities
 
         public virtual JiraProject JiraProject { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
         #endregion
     }

@@ -39,7 +39,8 @@ namespace TeamStatistics.Data
                     new IssueStatus { Id = (int)IssueStatusEnum.readyfortest, Name = "Ready for Test" },
                     new IssueStatus { Id = (int)IssueStatusEnum.intest, Name = "In Test" },
                     new IssueStatus { Id = (int)IssueStatusEnum.done, Name = "Done" },
-                    new IssueStatus { Id = (int)IssueStatusEnum.todo, Name = "To Do" }
+                    new IssueStatus { Id = (int)IssueStatusEnum.todo, Name = "To Do" },
+                    new IssueStatus { Id = (int)IssueStatusEnum.unknown, Name = "Unknown" }
                     );
 
             modelBuilder.Entity<Product>().HasData(

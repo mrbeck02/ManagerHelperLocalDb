@@ -1,0 +1,41 @@
+Date,Sprint,Quarter,Jira,Prod,Include,SP,Day1,Day2,Day3,Day4,Day5,Day6,Day7,Day8,Day9,Day10,Done,Rollover,Notes
+20-Jul-22,2022-JULY-2,Q3 2022,10415,CM,Yes,5,,,,,,,,,,,0,,
+20-Jul-22,2022-JULY-2,Q3 2022,11055,,Yes,8,,,,,,,,,,,0,,
+29-Jul-22,2022-AUG-1,,,,,,,,,,,,,,,,,,Support Eng
+15-Aug-22,2022-AUG-2,Q3 2022,11569,CR API,Yes,8,Open,Open,Open,In Progress,In Progress,Ready for Test,Ready for Test,In Test,In Test,In Test,8,,"Anton started testing Monday Aug 22
+QA environment was taken up by regression in the 1st week.
+Only bug that came back was at 10p yesterday and Charles found it."
+26-Aug-22,2022-AUG-3,Q3 2022,11960,PPS,No,3,PTO,PTO,Open,In Progress,In Progress,In Progress(PR),Holiday,In Progress,In Test,In Test,3,,
+9-Sep-22,2022-SEPT-1,Q4 2022,12048,,Yes,5,Open,In Progress,Ready for Test,PTO,PTO,PTO,PTO,PTO,PTO,PTO,5,,
+23-Sep-22,2022-SEPT-2,Q4 2022,11703,PPS,Yes,2,PTO,PTO,PTO,PTO,PTO,PTO,In Progress,Ready for Test,UAT,Done,2,,"He finished everything he was assigned, but I'm not counting this sprint since he was out on paternity leave and couldn't take more.  It would hurt his numbers unfairly"
+7-Oct-22,2022-OCT-1,Q4 2022,,,,,,,,,,,,,,,,,Support Eng
+21-Oct-22,2022-OCT-2,Q4 2022,12562,PFS,Yes,4,Open,Open,In Progress,In Progress,In Progress,In Progress,Ready for Test,In Test,In Test,In Progress,4,,
+21-Oct-22,2022-OCT-2,Q4 2022,12497,PPS,Yes,4,Open,Open,Ready for Test,In Test ,In Test ,In Test ,In Test,UAT,UAT,Ready for Release,4,,
+21-Oct-22,2022-OCT-2,Q4 2022,12773,PFS,Yes,0,,,,,,,Done,Done,Done,Done,1,,
+4-Nov-22,2022-NOV-1,Q4 2022,10397,PPS,Yes,6,Open,In Progress,In Progress,In Progress,In Progress,Holiday,In Progress,In Progress,In Progress,In Progress,0,Yes,"I think the ticket was not really clear. At the beginning I thought It was to write seeders first to reset  the whole system environment, I started working on that then I chatted with Glen and he said it was for seeder referral. Then started working on seeding referral by creating new orgs(receiving/referrering) and create referral based on those orgs. But Glen didn't want to create new orgs and ask to use existing orgs. The approach had to change couple times after talking to Glen and pray
+That is why you will see a lot of seeder classes got created under my ticket."
+18-Nov-22,2022-NOV-2,Q4 2022,5895,PFS,Yes,3,Open,In Progress,In Progress,Ready for Test,Holiday,Holiday,In Test,In Test,Ready for Release,Ready for Release,3,,
+18-Nov-22,2022-NOV-2,Q4 2022,5894,PFS,Yes,3,Open,In Progress,In Progress,Ready for Test,Holiday,Holiday,In Test,UAT,Ready for Release,Ready for Release,3,,
+2-Dec-22,2022-DEC-1,Q4 2022,11927,,Yes,5,Open,Open,Open,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,Ready for Test,,,
+2-Dec-22,2022-DEC-1,Q4 2022,12346,,Yes,5,Open,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,Done,,,
+2-Dec-22,2022-DEC-1,Q4 2022,13275,CRT,Yes,1,,,,,,,,,,In Progress,,,This was created during regression and was a blocker to issues in this sprint.  So we converted it to a support ticket and Mashini took it on since it's blocking one of his tickets.
+2-Dec-22,2022-DEC-1,,11927,,Yes,,Ready for Test,Ready for Test,Ready for Test,In Test,,,,,,Done,5,,
+2-Dec-22,2022-DEC-1,,12346,"PPS, CRT",Yes,,Done,Done,Done,Done,Done,Holiday,Holiday,Done,Done,Done,5,,
+2-Dec-22,2022-DEC-1,,13275,CRT,Yes,,Ready for Test,Ready for Test,In Test,In Test,,Holiday,Holiday,,,Done,1,,
+30-Dec-22,2023-JAN-1,Q1 2023,13094,"PPS, EPMM",Yes,8,Open,Holiday,In Progress,In Progress,In Progress,In Progress,In Progress,In Test,In Test,Ready for Release,8,,
+13-Jan-23,2023-JAN-2,Q1 2023,13088,"PPS, EPMM, CM",Yes,5,Open,Holiday,In Progress,In Progress,In Progress,In Test,In Test,In Test,In Test,Ready for Release,5,,
+13-Jan-23,2023-JAN-2,Q1 2023,13092,"PPS, EPMM",Yes,6,Open,Holiday,Open,In Progress,In Progress,In Progress,Ready for Test,In Test,In Test,Ready for Release,6,,
+27-Jan-23,2023-JAN-3,Q1 2023,13551,PPS,No,5,Open,In Progress,In Progress,In Progress,In Progress,In Progress,In Test,In Test,In Progress,In Progress,0,Yes,"In this sprint, we had Jenkins go down, many complicated regression bugs, Gul quit and a RIF.  It was a rough sprint"
+27-Jan-23,2023-JAN-3,Q1 2023,12807,PFS,No,6,Open,Open,Open,TODO,TODO,In Progress,In Progress,In Progress,In Progress,In Test,6,,
+27-Jan-23,2023-JAN-3,Q1 2023,13765,PPS,No,0,,,,,,Done,Done,Done,Done,Done,1,,
+27-Jan-23,2023-JAN-3,Q1 2023,13762,PPS,No,0,,,,,,Done,Done,Done,Done,Done,1,,
+27-Jan-23,2023-JAN-3,Q1 2023,13768,CM,No,0,,,,,,,Done,Done,Done,Done,1,,
+10-Feb-23,2023-FEB-1,Q1 2023,13551,PPS,Yes,3,Ready for Test,Ready for Test,Ready for Test,Ready for Test,Ready for Test,In Test,Holiday,In Test,In Test,UAT,3,,
+10-Feb-23,2023-FEB-1,Q1 2023,13077,CM,Yes,8,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,Holiday,In Test,In Test,UAT,8,,
+24-Feb-23,2023-FEB-2,Q1 2023,12760,PFS,No,4,Open,To Do,In Progress,In Progress,PTO,PTO,PTO,PTO,PTO,PTO,4,,
+13-Mar-23,2023-MAR-1,Q1 2023,14217,Availability API,Yes,5,PTO,PTO,Open,Open,In Progress,In Progress,In Progress,In Progress,In Progress,Done,5,,
+13-Mar-23,2023-MAR-1,Q1 2023,14186,Other,Yes,5,PTO,PTO,Open,In Progress,In Progress,In Progress,In Test,In Test,Done,Done,5,,
+27-Mar-23,2023-MAR-2,Q2 2023,13859,PPS,Yes,8,In Progress,In Progress,In Progress,In Progress,In Progress,In Test,In Progress,In Test,In Test,Done,8,,
+27-Mar-23,2023-MAR-2,Q2 2023,14413,Research,Yes,5,Open,Open,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,In Progress,UAT,5,,
+10-Apr-23,2023-APR-1,Q2 2023,14443,Other,Yes,6,TODO,TODO,In Progress,,,,,,,,,,
+10-Apr-23,2023-APR-1,Q2 2023,14465,PPS,Yes,3,In Progress,In Progress,In Progress,,,,,,,,,,

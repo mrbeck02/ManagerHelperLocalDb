@@ -4,19 +4,21 @@ namespace TeamStatistics.DAL
 {
     public interface IUnitOfWork
     {
-        GenericRepository<Commitment> CommitmentRepository { get; }
-        GenericRepository<Entry> EntryRepository { get; }
-        GenericRepository<Developer> DeveloperRepository { get; }
+        IGenericRepository<Commitment> CommitmentRepository { get; }
+        IGenericRepository<Entry> EntryRepository { get; }
+        IGenericRepository<Developer> DeveloperRepository { get; }
 
-        GenericRepository<Quarter> QuarterRepository { get; }
+        IGenericRepository<Quarter> QuarterRepository { get; }
 
-        GenericRepository<Sprint> SprintRepository { get; }
+        IGenericRepository<Sprint> SprintRepository { get; }
 
-        GenericRepository<JiraIssue> JiraIssueRepository { get; }
+        IGenericRepository<JiraIssue> JiraIssueRepository { get; }
 
-        GenericRepository<Product> ProductRepository { get; }
+        IGenericRepository<Product> ProductRepository { get; }
 
-        GenericRepository<JiraProject> JiraProductRepository { get; }
+        IGenericRepository<JiraProject> JiraProjectRepository { get; }
+
+        IGenericRepository<IssueStatus> IssueStatusRepository { get; }
 
         void Save();
     }

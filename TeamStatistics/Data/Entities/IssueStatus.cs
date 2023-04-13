@@ -10,7 +10,7 @@ namespace TeamStatistics.Data.Entities
 {
     public enum IssueStatusEnum
     {
-        open = 1, todo, inprogress, readyfortest, intest, readyforrelease, done
+        open = 1, todo, inprogress, readyfortest, intest, readyforrelease, done, unknown
     };
 
     public class IssueStatus

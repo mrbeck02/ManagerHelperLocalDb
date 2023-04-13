@@ -1,14 +1,11 @@
 ﻿using CsvHelper;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using Microsoft.VisualBasic;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using TeamStatistics.DAL;
-using TeamStatistics.Data;
 using TeamStatistics.Data.Entities;
+using TeamStatistics.Extensions;
 
 namespace TeamStatistics.CsvImporter
 {
@@ -66,15 +63,15 @@ namespace TeamStatistics.CsvImporter
         private void ensureSprintExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
         {
             // If sprint doesn't exist...
-            if (!unitOfWork.SprintRepository.Get().Any(s => string.CompareOrdinal(s.Name, csvEntry.Sprint) == 0))
+            if (unitOfWork.SprintRepository.Get(s => string.Compare(s.Name, csvEntry.Sprint) == 0).Count() == 0)
             {
-                if (!unitOfWork.QuarterRepository.Get().Any(q => string.CompareOrdinal(q.Name, csvEntry.Quarter) == 0))
+                if (unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).Count() == 0)
                 {
                     unitOfWork.QuarterRepository.Insert(new Quarter() { Name = csvEntry.Quarter, Id = Guid.NewGuid() });
                     unitOfWork.Save();
                 }
 
-                var quarter = unitOfWork.QuarterRepository.Get(q => string.CompareOrdinal(q.Name, csvEntry.Quarter) == 0).First();
+                var quarter = unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).First();
                 unitOfWork.SprintRepository.Insert(new Sprint() { Name = csvEntry.Sprint, Id = Guid.NewGuid(), QuarterId = quarter.Id, StartDate = csvEntry.Date, EndDate = csvEntry.Date.AddDays(14) });
                 unitOfWork.Save();
             }
@@ -82,32 +79,53 @@ namespace TeamStatistics.CsvImporter
 
         private void ensureJiraIssueExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
         {
-            if (!unitOfWork.JiraIssueRepository.Get().Any(j => string.CompareOrdinal(j.Number, csvEntry.Jira) == 0))
+            if (unitOfWork.JiraIssueRepository.Get(j => string.Compare(j.Number, csvEntry.Jira) == 0).Count() > 0)
+                return;
+
+            var projects = unitOfWork.JiraProjectRepository.Get();
+
+            var jiraIssue = new JiraIssue() { 
+                Id = Guid.NewGuid(), 
+                DateCreatedUtc = DateTime.UtcNow,
+                Number = csvEntry.Jira,
+                DateModifiedUtc = DateTime.UtcNow,
+                TimeZone = TimeZoneInfo.Local.StandardName,
+                StoryPoints = csvEntry.SP.HasValue ? csvEntry.SP.Value : 0,
+                JiraProjectId = projects.First().Id,
+                JiraProject = projects.First()
+            };
+
+            var csvProducts = csvEntry.Prod.Split(',');
+
+            foreach (var product in csvProducts)
             {
-                var jiraIssue = new JiraIssue() { 
-                    Id = Guid.NewGuid(), 
-                    DateCreatedUtc = DateTime.UtcNow,
-                    Number = csvEntry.Jira,
-                    DateModifiedUtc = DateTime.UtcNow,
-                    TimeZone = TimeZoneInfo.Local.StandardName,
-                    StoryPoints = csvEntry.SP.HasValue ? csvEntry.SP.Value : 0
-                };
+                if (string.IsNullOrWhiteSpace(product))
+                    continue;
 
-                var csvProducts = csvEntry.Prod.Split(',');
+                var prod = unitOfWork.ProductRepository.Get(p => string.Compare(p.Name, product) == 0).FirstOrDefault();
 
-                foreach (var product in csvProducts)
-                {
-                    var prod = unitOfWork.ProductRepository.Get(p => string.CompareOrdinal(p.Name, product) == 0).FirstOrDefault();
+                if (prod != null)
+                    jiraIssue.Products.Add(prod);
+                else if (Enum.TryParse(typeof(ProductEnum), product, out var productId))
+                { 
+                    var prod2 = unitOfWork.ProductRepository.GetByID((int)productId);
 
-                    if (prod != null)
-                        jiraIssue.Products.Add(prod);
+                    if (prod2 != null)
+                        jiraIssue.Products.Add(prod2);
                 }
-
-                unitOfWork.JiraIssueRepository.Insert(jiraIssue);
-                unitOfWork.Save();
             }
+
+            unitOfWork.JiraIssueRepository.Insert(jiraIssue);
+            unitOfWork.Save();
         }
 
+        /// <summary>
+        /// Note: If an entry for this commitment on this day already exists, this will not create another
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="commitmentId"></param>
+        /// <param name="dayText"></param>
+        /// <param name="dayOfSprint"></param>
         private void addEntry(IUnitOfWork unitOfWork, Guid commitmentId, string dayText, int dayOfSprint)
         {
             if (string.IsNullOrEmpty(dayText))
@@ -115,10 +133,22 @@ namespace TeamStatistics.CsvImporter
 
             var commitment = unitOfWork.CommitmentRepository.GetByID(commitmentId);
 
-            var dateEntered = commitment.Sprint.StartDate;
-            
+            var dateEntered = commitment.Sprint.StartDate.FindDateOfSprintDay(dayOfSprint);
 
+            // For imports, we should only have one entry per day per issue
+            if (unitOfWork.EntryRepository.Get(e =>
+                e.DateEntered.Year == dateEntered.Year &&
+                e.DateEntered.Month == dateEntered.Year &&
+                e.DateEntered.Day == dateEntered.Day &&
+                e.CommitmentId == commitment.Id).Count() > 0)
+                return;
+
+            var issueStatus = unitOfWork.IssueStatusRepository.Get(s => string.CompareOrdinal(s.Name, dayText) == 0).FirstOrDefault();
             
+            if (issueStatus == null) 
+            {
+                issueStatus = unitOfWork.IssueStatusRepository.Get(s => s.Name == "Unknown").First();
+            }
 
             var entry = new Entry()
             {
@@ -128,51 +158,10 @@ namespace TeamStatistics.CsvImporter
                 TimeZone = TimeZoneInfo.Local.StandardName,
                 Id = Guid.NewGuid(),
                 IsHoliday = string.CompareOrdinal(dayText, "Holiday") == 0,
-                IsPto = string.CompareOrdinal(dayText, "PTO") == 0
-                // add status
-
+                IsPto = string.CompareOrdinal(dayText, "PTO") == 0,
+                DateEntered = dateEntered,
+                IssueStatusId = issueStatus.Id
             };
-        }
-
-        /// <summary>
-        /// Note: This method assumes that the first day of the sprint is a workday
-        /// Note: Day 1 is the same date as the start of the sprint
-        /// </summary>
-        /// <param name="sprintStart"></param>
-        /// <param name="dayOfSprint"></param>
-        /// <returns></returns>
-        private DateTime findDateOfSprintDay(DateTime sprintStart, int dayOfSprint)
-        {
-            if (dayOfSprint == 1)
-                return sprintStart;
-
-            var dateTime = sprintStart.Date;
-
-            for (int day = 0; day < dayOfSprint; day++)
-            {
-                dateTime = findNextWorkingDate(dateTime);
-            }
-
-            return dateTime;
-        }
-
-        private DateTime findNextWorkingDate(DateTime date)
-        {
-            // Add one day to the input date until we find a working day
-            while (true)
-            {
-                // Check if the current date is a weekend
-                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    // Add one day to the date
-                    date = date.AddDays(1);
-                }
-                else
-                {
-                    // This is a working day, so return the date
-                    return date;
-                }
-            }
         }
     }
 }

@@ -15,26 +15,29 @@ namespace TeamStatistics.DAL
         private GenericRepository<JiraIssue> _jiraIssueRepository;
         private GenericRepository<Product> _productRepository;
         private GenericRepository<JiraProject> _jiraProjectRepository;
+        public GenericRepository<IssueStatus> _issueStatusRepository;
 
         public UnitOfWork(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
-        public GenericRepository<Commitment> CommitmentRepository { get => _commitmentRepository ??= new GenericRepository<Commitment>(_dataContext); }
-        public GenericRepository<Entry> EntryRepository { get => _entryRepository ??= new GenericRepository<Entry>(_dataContext); }
+        public IGenericRepository<Commitment> CommitmentRepository { get => _commitmentRepository ??= new GenericRepository<Commitment>(_dataContext); }
+        public IGenericRepository<Entry> EntryRepository { get => _entryRepository ??= new GenericRepository<Entry>(_dataContext); }
 
-        public GenericRepository<Developer> DeveloperRepository { get => _developerRepository ??= new GenericRepository<Developer>(_dataContext); }
+        public IGenericRepository<Developer> DeveloperRepository { get => _developerRepository ??= new GenericRepository<Developer>(_dataContext); }
 
-        public GenericRepository<Quarter> QuarterRepository { get => _quarterRepository ??= new GenericRepository<Quarter>(_dataContext); }
+        public IGenericRepository<Quarter> QuarterRepository { get => _quarterRepository ??= new GenericRepository<Quarter>(_dataContext); }
 
-        public GenericRepository<Sprint> SprintRepository { get => _sprintRepository ??= new GenericRepository<Sprint>(_dataContext); }
+        public IGenericRepository<Sprint> SprintRepository { get => _sprintRepository ??= new GenericRepository<Sprint>(_dataContext); }
 
-        public GenericRepository<JiraIssue> JiraIssueRepository { get => _jiraIssueRepository ??= new GenericRepository<JiraIssue>(_dataContext); }
+        public IGenericRepository<JiraIssue> JiraIssueRepository { get => _jiraIssueRepository ??= new GenericRepository<JiraIssue>(_dataContext); }
 
-        public GenericRepository<Product> ProductRepository { get => _productRepository ??= new GenericRepository<Product>(_dataContext); }
+        public IGenericRepository<Product> ProductRepository { get => _productRepository ??= new GenericRepository<Product>(_dataContext); }
 
-        public GenericRepository<JiraProject> JiraProductRepository { get => _jiraProjectRepository ??= new GenericRepository<JiraProject>(_dataContext); }
+        public IGenericRepository<JiraProject> JiraProjectRepository { get => _jiraProjectRepository ??= new GenericRepository<JiraProject>(_dataContext); }
+
+        public IGenericRepository<IssueStatus> IssueStatusRepository { get => _issueStatusRepository ??= new GenericRepository<IssueStatus>(_dataContext); }
 
         public void Save()
         {
