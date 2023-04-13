@@ -115,6 +115,11 @@ namespace TeamStatistics.CsvImporter
 
             var commitment = unitOfWork.CommitmentRepository.GetByID(commitmentId);
 
+            var dateEntered = commitment.Sprint.StartDate;
+            
+
+            
+
             var entry = new Entry()
             {
                 CommitmentId = commitmentId,
@@ -127,6 +132,47 @@ namespace TeamStatistics.CsvImporter
                 // add status
 
             };
+        }
+
+        /// <summary>
+        /// Note: This method assumes that the first day of the sprint is a workday
+        /// Note: Day 1 is the same date as the start of the sprint
+        /// </summary>
+        /// <param name="sprintStart"></param>
+        /// <param name="dayOfSprint"></param>
+        /// <returns></returns>
+        private DateTime findDateOfSprintDay(DateTime sprintStart, int dayOfSprint)
+        {
+            if (dayOfSprint == 1)
+                return sprintStart;
+
+            var dateTime = sprintStart.Date;
+
+            for (int day = 0; day < dayOfSprint; day++)
+            {
+                dateTime = findNextWorkingDate(dateTime);
+            }
+
+            return dateTime;
+        }
+
+        private DateTime findNextWorkingDate(DateTime date)
+        {
+            // Add one day to the input date until we find a working day
+            while (true)
+            {
+                // Check if the current date is a weekend
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    // Add one day to the date
+                    date = date.AddDays(1);
+                }
+                else
+                {
+                    // This is a working day, so return the date
+                    return date;
+                }
+            }
         }
     }
 }

@@ -94,7 +94,7 @@ namespace TeamStatistics.ViewModels
 
         private void importCsvCommand(object obj)
         {
-            _statisticsCsvImporter.ImportData(CsvPath, new UnitOfWork(_contextFactory.CreateDbContext()));
+            _statisticsCsvImporter.ImportData(CsvPath, SelectedDeveloperOption.Value, new UnitOfWork(_contextFactory.CreateDbContext()));
         }
 
         #endregion

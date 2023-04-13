@@ -8,10 +8,11 @@ namespace TeamStatistics.Data.Entities
         [Key]   
         public Guid Id { get; set; }
 
+        public DateTime DateEntered { get; set; }
+
         public bool IsPto { get; set; }
 
         public bool IsHoliday { get; set; }
-
 
         public DateTime DateCreatedUtc { get; set; }
 
