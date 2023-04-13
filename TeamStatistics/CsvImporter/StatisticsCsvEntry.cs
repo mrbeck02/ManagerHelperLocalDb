@@ -23,8 +23,10 @@ namespace TeamStatistics.CsvImporter
         public string Day9 { get; set; }
         public string Day10 { get; set; }
 
-        public int Done { get; set; }
+        public int? Done { get; set; }
 
         public string Rollover { get; set; }
+
+        public string Notes { get; set; }
     }
 }

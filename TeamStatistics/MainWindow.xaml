@@ -7,10 +7,62 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="MainViewModel">
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- Converters -->
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            
+            <DataTemplate x:Key="FilterItemTextContent">
+                <TextBlock VerticalAlignment="Center" Foreground="Black" TextTrimming="CharacterEllipsis" Text="{Binding Text}"/>
+            </DataTemplate>
+
+            <DataTemplate x:Key="FilterItemIconContent">
+                <TextBlock Text="✓" Foreground="Green" 
+                    VerticalAlignment="Center" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </DataTemplate>
+
+            <DataTemplate x:Key="FilterNormalItemTemplate">
+                <Grid>
+                    <ContentPresenter x:Name="Presenter1" Content="{Binding}" ContentTemplate="{StaticResource FilterItemIconContent}" />
+                    <ContentPresenter x:Name="Presenter2" Content="{Binding}" ContentTemplate="{StaticResource FilterItemTextContent}" Margin="14,0,0,0" />
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="FilterSelectionBoxValuesContent">
+                <TextBlock Text="{Binding Text}">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Foreground" Value="Gray" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </DataTemplate>
+
+            <DataTemplate x:Key="FilterNormalSelectionBoxTemplate">
+                <StackPanel VerticalAlignment="Center" >
+                    <ContentPresenter x:Name="Presenter2" Content="{Binding}" ContentTemplate="{StaticResource FilterSelectionBoxValuesContent}" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="FilterNormalCombinedTemplate">
+                <ContentPresenter x:Name="Presenter" Content="{Binding}" ContentTemplate="{StaticResource FilterNormalItemTemplate}" />
+                <DataTemplate.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor,ComboBoxItem,1}}" Value="{x:Null}">
+                        <Setter TargetName="Presenter" Property="ContentTemplate" Value="{StaticResource FilterNormalSelectionBoxTemplate}" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ComboBox ItemsSource="{Binding DeveloperOptions}" SelectedItem="{Binding SelectedDeveloperOption, Mode=TwoWay}" SelectedValuePath="Value" ItemTemplate="{StaticResource FilterNormalCombinedTemplate}" Width="200" />
+            <TextBox Margin="10,0,0,0" Width="300" Text="{Binding CsvPath, UpdateSourceTrigger=PropertyChanged}" />
             <Button Content="Import" Padding="10,2" Command="{Binding ImportCsvCommand}" />
-            <TextBox Margin="10,0" Width="300" Text="{Binding CsvPath, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </Grid>
 </Window>

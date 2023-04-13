@@ -17,5 +17,10 @@ namespace TeamStatistics.Data.Entities
         public DateTime DateModifiedUtc { get; set; }
 
         public string TimeZone { get; set; } = "";
+
+        public string GetFullName()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }

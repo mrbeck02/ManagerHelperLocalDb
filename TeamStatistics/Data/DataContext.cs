@@ -57,7 +57,6 @@ namespace TeamStatistics.Data
                 new Product { Id = (int)ProductEnum.Dynatrace, Name = "Dynatrace" },
                 new Product { Id = (int)ProductEnum.Other, Name = "Other" }
             );
-
         }
     }
 }

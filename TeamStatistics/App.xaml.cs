@@ -44,7 +44,6 @@ namespace TeamStatistics
             services.AddScoped<IStatisticsCsvImporter, StatisticsCsvImporter>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IMainViewModel, MainViewModel>();
-            services.AddTransient(typeof(IGenericRepository<Entry>), typeof(GenericRepository<Entry>));
             services.AddSingleton<MainWindow>();
         }
 
