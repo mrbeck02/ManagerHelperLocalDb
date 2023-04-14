@@ -100,7 +100,14 @@ namespace TeamStatistics.ViewModels
             try
             {
                 var entries = _reader.ReadStatistics(CsvPath);
+
+                if (entries.Count == 0) { 
+                    MessageBox.Show($"No entries found in file {CsvPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    return;
+                }
+
                 _statisticsCsvImporter.ImportData(entries, SelectedDeveloperOption.Value, new UnitOfWork(_contextFactory.CreateDbContext()));
+                MessageBox.Show($"{entries.Count} entries imported.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
