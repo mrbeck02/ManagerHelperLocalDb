@@ -58,11 +58,18 @@
             </DataTemplate>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ComboBox ItemsSource="{Binding DeveloperOptions}" SelectedItem="{Binding SelectedDeveloperOption, Mode=TwoWay}" SelectedValuePath="Value" ItemTemplate="{StaticResource FilterNormalCombinedTemplate}" Width="200" />
-            <TextBox Margin="10,0,0,0" Width="300" Text="{Binding CsvPath, UpdateSourceTrigger=PropertyChanged}" />
-            <Button Content="Import" Padding="10,2" Command="{Binding ImportCsvCommand}" />
+    <StackPanel Margin="10">
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="Developer" />
+            <ComboBox ItemsSource="{Binding DeveloperOptions}" SelectedItem="{Binding SelectedDeveloperOption, Mode=TwoWay}" SelectedValuePath="Value" ItemTemplate="{StaticResource FilterNormalCombinedTemplate}"  Width="200" />
         </StackPanel>
-    </Grid>
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="Import Data" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBox Margin="0,0,4,0" Width="250" Text="{Binding CsvPath, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Content="Import" Padding="10,2" Command="{Binding ImportCsvCommand}" />
+            </StackPanel>
+        </StackPanel>
+        
+    </StackPanel>
 </Window>
