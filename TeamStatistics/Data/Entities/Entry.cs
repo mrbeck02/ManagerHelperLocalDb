@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamStatistics.Data.Entities
 {
@@ -22,10 +23,12 @@ namespace TeamStatistics.Data.Entities
 
         #region Relationships
 
+        [ForeignKey("IssueStatus")]
         public int IssueStatusId { get; set; }
 
         public virtual IssueStatus IssueStatus { get; set; }
 
+        [ForeignKey("CommitmentId")]
         public Guid CommitmentId { get; set; }
 
         public virtual Commitment Commitment { get; set; }

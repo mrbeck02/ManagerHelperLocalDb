@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TeamStatistics.Data.Entities
@@ -11,5 +12,16 @@ namespace TeamStatistics.Data.Entities
         public string Name { get; set; } = "";
 
         public string Domain { get; set; } = "";
+
+        #region Relationships
+
+        public virtual ICollection<JiraIssue> JiraIssues { get; set; }
+
+        #endregion
+
+        public JiraProject() 
+        { 
+            JiraIssues = new HashSet<JiraIssue>();
+        }
     }
 }

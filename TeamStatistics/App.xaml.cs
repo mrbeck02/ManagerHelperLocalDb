@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Sqlite.Update.Internal;
+using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -37,8 +40,10 @@ namespace TeamStatistics
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlite("Data Source=c:\\Temp\\mydb.db");
+                options.LogTo(Console.WriteLine);
             });
 
+            services.AddScoped<IStatisticsCsvReader, StatisticsCsvReader>();
             services.AddScoped<IDesignTimeDbContextFactory<DataContext>, DesignTimeDataContextFactory>();
             services.AddScoped<IDbContextFactory<DataContext>, DataContextFactory>();
             services.AddScoped<IStatisticsCsvImporter, StatisticsCsvImporter>();

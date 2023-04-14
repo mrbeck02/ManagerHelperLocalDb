@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamStatistics.Data.Entities
 {
@@ -19,14 +20,17 @@ namespace TeamStatistics.Data.Entities
 
         #region Relationships
 
+        [ForeignKey("Sprint")]
         public Guid SprintId { get; set; }
 
         public virtual Sprint Sprint { get; set; }
 
+        [ForeignKey("JiraIssueId")]
         public Guid JiraIssueId { get; set; }
 
         public virtual JiraIssue JiraIssue { get; set; }
 
+        [ForeignKey("DeveloperId")]
         public Guid DeveloperId { get; set; }
 
         public virtual Developer Developer { get; set; }

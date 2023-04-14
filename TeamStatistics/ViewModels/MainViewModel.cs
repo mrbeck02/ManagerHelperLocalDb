@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using TeamStatistics.CsvImporter;
 using TeamStatistics.DAL;
 using TeamStatistics.Data;
@@ -15,6 +17,7 @@ namespace TeamStatistics.ViewModels
     {
         private IStatisticsCsvImporter _statisticsCsvImporter;
         private IDbContextFactory<DataContext> _contextFactory;
+        private IStatisticsCsvReader _reader;
 
         #region Properties
 
@@ -94,15 +97,25 @@ namespace TeamStatistics.ViewModels
 
         private void importCsvCommand(object obj)
         {
-            _statisticsCsvImporter.ImportData(CsvPath, SelectedDeveloperOption.Value, new UnitOfWork(_contextFactory.CreateDbContext()));
+            try
+            {
+                var entries = _reader.ReadStatistics(CsvPath);
+                _statisticsCsvImporter.ImportData(entries, SelectedDeveloperOption.Value, new UnitOfWork(_contextFactory.CreateDbContext()));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
 
-        public MainViewModel(IDbContextFactory<DataContext> contextFactory, 
+        public MainViewModel(IDbContextFactory<DataContext> contextFactory,
+            IStatisticsCsvReader reader,
             IStatisticsCsvImporter statisticsCsvImporter)
         {
             _statisticsCsvImporter = statisticsCsvImporter;
+            _reader = reader;
             _contextFactory = contextFactory;
 
             initializeViewModel();

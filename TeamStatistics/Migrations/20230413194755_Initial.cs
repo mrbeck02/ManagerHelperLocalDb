@@ -55,19 +55,6 @@ namespace TeamStatistics.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Quarters",
                 columns: table => new
                 {
@@ -127,27 +114,22 @@ namespace TeamStatistics.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JiraIssueProduct",
+                name: "Products",
                 columns: table => new
                 {
-                    JiraIssuesId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    JiraIssueId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JiraIssueProduct", x => new { x.JiraIssuesId, x.ProductsId });
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JiraIssueProduct_JiraIssues_JiraIssuesId",
-                        column: x => x.JiraIssuesId,
+                        name: "FK_Products_JiraIssues_JiraIssueId",
+                        column: x => x.JiraIssueId,
                         principalTable: "JiraIssues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JiraIssueProduct_Products_ProductsId",
-                        column: x => x.ProductsId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -230,6 +212,7 @@ namespace TeamStatistics.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DateEntered = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsPto = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsHoliday = table.Column<bool>(type: "INTEGER", nullable: false),
                     DateCreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -266,27 +249,8 @@ namespace TeamStatistics.Migrations
                     { 4, "Ready for Test" },
                     { 5, "In Test" },
                     { 6, "Ready for Release" },
-                    { 7, "Done" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "Name" },
-                values: new object[,]
-                {
-                    { 1, "CARA" },
-                    { 2, "Crisis Management" },
-                    { 3, "Critical Resource Tracker" },
-                    { 4, "EPMM" },
-                    { 5, "OpenBeds" },
-                    { 6, "Treatment Connection" },
-                    { 7, "SMART on FHIR" },
-                    { 8, "Availability API" },
-                    { 9, "Referral API" },
-                    { 10, "Cognito" },
-                    { 11, "Launcher" },
-                    { 12, "Dynatrace" },
-                    { 13, "Other" }
+                    { 7, "Done" },
+                    { 8, "Unknown" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -315,11 +279,6 @@ namespace TeamStatistics.Migrations
                 column: "IssueStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JiraIssueProduct_ProductsId",
-                table: "JiraIssueProduct",
-                column: "ProductsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_JiraIssues_JiraProjectId",
                 table: "JiraIssues",
                 column: "JiraProjectId");
@@ -340,6 +299,11 @@ namespace TeamStatistics.Migrations
                 column: "SprintId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_JiraIssueId",
+                table: "Products",
+                column: "JiraIssueId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sprints_QuarterId",
                 table: "Sprints",
                 column: "QuarterId");
@@ -352,19 +316,16 @@ namespace TeamStatistics.Migrations
                 name: "Entries");
 
             migrationBuilder.DropTable(
-                name: "JiraIssueProduct");
+                name: "JiraSupportIssues");
 
             migrationBuilder.DropTable(
-                name: "JiraSupportIssues");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Commitments");
 
             migrationBuilder.DropTable(
                 name: "IssueStatuses");
-
-            migrationBuilder.DropTable(
-                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Developers");

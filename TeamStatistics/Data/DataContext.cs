@@ -1,8 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using TeamStatistics.Data.Entities;
 
 namespace TeamStatistics.Data
 {
+    /// <summary>
+    /// WARNING!!!: Guids are not supported in SQLite, they use a TEXT type.  When translating the Guid uses toUpper.  So if you insert
+    /// entries into the database manually, be sure to make the IDs upper case.
+    /// </summary>
     public class DataContext : DbContext
     {
         public DbSet<IssueStatus> IssueStatuses { get; set; }
@@ -28,7 +33,10 @@ namespace TeamStatistics.Data
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlite("Data Source=c:\\Temp\\mydb.db");
+        {
+            optionsBuilder.UseSqlite("Data Source=c:\\Temp\\mydb.db");
+            optionsBuilder.LogTo(Console.WriteLine);
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,7 +64,10 @@ namespace TeamStatistics.Data
                 new Product { Id = (int)ProductEnum.Cognito, Name = "Cognito" },
                 new Product { Id = (int)ProductEnum.Launcher, Name = "Launcher" },
                 new Product { Id = (int)ProductEnum.Dynatrace, Name = "Dynatrace" },
-                new Product { Id = (int)ProductEnum.Other, Name = "Other" }
+                new Product { Id = (int)ProductEnum.Other, Name = "Other" },
+                new Product { Id = (int)ProductEnum.CRAPI, Name = "Create Referral API" },
+                new Product { Id = (int)ProductEnum.Research, Name = "Research" },
+                new Product { Id = (int)ProductEnum.JI, Name = "JI" }
             );
         }
     }

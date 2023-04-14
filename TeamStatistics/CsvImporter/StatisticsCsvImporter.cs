@@ -1,7 +1,5 @@
-﻿using CsvHelper;
-using System;
-using System.Globalization;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TeamStatistics.DAL;
 using TeamStatistics.Data.Entities;
@@ -14,44 +12,37 @@ namespace TeamStatistics.CsvImporter
     /// </summary>
     public class StatisticsCsvImporter : IStatisticsCsvImporter
     {
-        public void ImportData(string csvPath, Developer developer, IUnitOfWork unitOfWork)
+        public void ImportData(List<StatisticsCsvEntry> csvEntries, Developer developer, IUnitOfWork unitOfWork)
         {
-            using (var reader = new StreamReader(csvPath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            if (csvEntries == null)
+                return;
+
+            foreach (var csvEntry in csvEntries) 
             {
-                var csvEntries = csv.GetRecords<StatisticsCsvEntry>();
+                // If there isn't a Jira issue, there isn't a commitment
+                if (string.IsNullOrEmpty(csvEntry.Jira))
+                    continue;
 
-                foreach (var csvEntry in csvEntries) 
-                {
-                    // If there isn't a Jira issue, there isn't a commitment
-                    if (string.IsNullOrEmpty(csvEntry.Jira))
-                        continue;
+                ensureSprintExists(unitOfWork, csvEntry);
+                ensureJiraIssueExists(unitOfWork, csvEntry);
+                ensureCommitmentExists(unitOfWork, developer, csvEntry);
 
-                    ensureSprintExists(unitOfWork, csvEntry);
-                    ensureJiraIssueExists(unitOfWork, csvEntry);
+                var commitment = unitOfWork.CommitmentRepository.Get(c => string.Compare(c.Sprint.Name, csvEntry.Sprint) == 0 &&
+                    string.Compare(c.Sprint.Quarter.Name, csvEntry.Quarter) == 0 &&
+                    string.Compare(c.JiraIssue.Number, csvEntry.Jira) == 0 &&
+                    c.Developer.Id == developer.Id).First();
 
-                    // Each row is a commitment that was made.
-                    var commitment = new Commitment()
-                    {
-                        Id = Guid.NewGuid(),
-                        DateCreatedUtc = DateTime.UtcNow,
-                        DateModifiedUtc = DateTime.UtcNow,
-                        TimeZone = TimeZoneInfo.Local.StandardName,
-                        DeveloperId = developer.Id,
-                        SprintId = unitOfWork.SprintRepository.Get(s => string.CompareOrdinal(s.Name, csvEntry.Sprint) == 0).First().Id,
-                        JiraIssueId = unitOfWork.JiraIssueRepository.Get(j => string.CompareOrdinal(j.Number, csvEntry.Jira) == 0).First().Id,
-                        DidComplete = csvEntry.Done.HasValue,
-                        IncludeInData = string.CompareOrdinal(csvEntry.Include, "Yes") == 0,
-                        Notes = csvEntry.Notes,
-                        WasInitiallyCommitted = csvEntry.SP.HasValue && csvEntry.SP.Value > 0
-                    };
-
-                    unitOfWork.CommitmentRepository.Insert(commitment);
-                    unitOfWork.Save();
-
-                    // Each day is an entry for the commitment
-                    addEntry(unitOfWork, commitment.Id, csvEntry.Day1, 1);
-                }
+                // Each day is an entry for the commitment
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day1, 1);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day2, 2);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day3, 3);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day4, 4);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day5, 5);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day6, 6);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day7, 7);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day8, 8);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day9, 9);
+                addEntry(unitOfWork, commitment.Id, csvEntry.Day10, 10);
             }
         }
 
@@ -84,15 +75,14 @@ namespace TeamStatistics.CsvImporter
 
             var projects = unitOfWork.JiraProjectRepository.Get();
 
-            var jiraIssue = new JiraIssue() { 
-                Id = Guid.NewGuid(), 
+            var jiraIssue = new JiraIssue() {
+                Id = Guid.NewGuid(),
                 DateCreatedUtc = DateTime.UtcNow,
                 Number = csvEntry.Jira,
                 DateModifiedUtc = DateTime.UtcNow,
                 TimeZone = TimeZoneInfo.Local.StandardName,
                 StoryPoints = csvEntry.SP.HasValue ? csvEntry.SP.Value : 0,
-                JiraProjectId = projects.First().Id,
-                JiraProject = projects.First()
+                JiraProjectId = projects.First().Id
             };
 
             var csvProducts = csvEntry.Prod.Split(',');
@@ -107,7 +97,7 @@ namespace TeamStatistics.CsvImporter
                 if (prod != null)
                     jiraIssue.Products.Add(prod);
                 else if (Enum.TryParse(typeof(ProductEnum), product, out var productId))
-                { 
+                {
                     var prod2 = unitOfWork.ProductRepository.GetByID((int)productId);
 
                     if (prod2 != null)
@@ -116,6 +106,35 @@ namespace TeamStatistics.CsvImporter
             }
 
             unitOfWork.JiraIssueRepository.Insert(jiraIssue);
+            unitOfWork.Save();
+        }
+
+        private void ensureCommitmentExists(IUnitOfWork unitOfWork, Developer developer, StatisticsCsvEntry csvEntry)
+        {
+            // Don't add commitment if it's already been added
+            if (unitOfWork.CommitmentRepository.Get(c => string.Compare(c.Sprint.Name, csvEntry.Sprint) == 0 &&
+                    string.Compare(c.Sprint.Quarter.Name, csvEntry.Quarter) == 0 &&
+                    string.Compare(c.JiraIssue.Number, csvEntry.Jira) == 0 &&
+                    c.Developer.Id == developer.Id).Count() > 0)
+                return;
+
+            // Each row is a commitment that was made.
+            var commitment = new Commitment()
+            {
+                Id = Guid.NewGuid(),
+                DateCreatedUtc = DateTime.UtcNow,
+                DateModifiedUtc = DateTime.UtcNow,
+                TimeZone = TimeZoneInfo.Local.StandardName,
+                DeveloperId = developer.Id,
+                SprintId = unitOfWork.SprintRepository.Get(s => string.Compare(s.Name, csvEntry.Sprint) == 0).First().Id,
+                JiraIssueId = unitOfWork.JiraIssueRepository.Get(j => string.Compare(j.Number, csvEntry.Jira) == 0).First().Id,
+                DidComplete = csvEntry.Done.HasValue,
+                IncludeInData = string.CompareOrdinal(csvEntry.Include, "Yes") == 0,
+                Notes = csvEntry.Notes,
+                WasInitiallyCommitted = csvEntry.SP.HasValue && csvEntry.SP.Value > 0
+            };
+
+            unitOfWork.CommitmentRepository.Insert(commitment);
             unitOfWork.Save();
         }
 
@@ -143,7 +162,7 @@ namespace TeamStatistics.CsvImporter
                 e.CommitmentId == commitment.Id).Count() > 0)
                 return;
 
-            var issueStatus = unitOfWork.IssueStatusRepository.Get(s => string.CompareOrdinal(s.Name, dayText) == 0).FirstOrDefault();
+            var issueStatus = unitOfWork.IssueStatusRepository.Get(s => string.Compare(s.Name, dayText) == 0).FirstOrDefault();
             
             if (issueStatus == null) 
             {

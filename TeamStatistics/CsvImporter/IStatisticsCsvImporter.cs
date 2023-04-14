@@ -1,10 +1,11 @@
-﻿using TeamStatistics.DAL;
+﻿using System.Collections.Generic;
+using TeamStatistics.DAL;
 using TeamStatistics.Data.Entities;
 
 namespace TeamStatistics.CsvImporter
 {
     public interface IStatisticsCsvImporter
     {
-        void ImportData(string csvPath, Developer developer, IUnitOfWork unitOfWork);
+        void ImportData(List<StatisticsCsvEntry> csvEntries, Developer developer, IUnitOfWork unitOfWork);
     }
 }

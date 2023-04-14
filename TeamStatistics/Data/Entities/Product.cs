@@ -5,7 +5,7 @@ namespace TeamStatistics.Data.Entities
 {
     public enum ProductEnum
     {
-        CARA = 1, CM, CRT, EPMM, PPS, PFS, SMARTonFHIR, AvailabilityAPI, ReferralAPI, Cognito, Launcher, Dynatrace, Other
+        CARA = 1, CM, CRT, EPMM, PPS, PFS, SMARTonFHIR, AvailabilityAPI, ReferralAPI, Cognito, Launcher, Dynatrace, Other, CRAPI, Research, JI
     };
 
     public class Product
@@ -17,7 +17,7 @@ namespace TeamStatistics.Data.Entities
 
         #region Relationships
 
-        public virtual ICollection<JiraIssue> JiraIssues { get; set; } = new List<JiraIssue>();
+        //public virtual ICollection<JiraIssue> JiraIssues { get; set; } = new List<JiraIssue>();
 
         #endregion
     }

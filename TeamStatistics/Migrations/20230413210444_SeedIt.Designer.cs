@@ -11,29 +11,14 @@ using TeamStatistics.Data;
 namespace TeamStatistics.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230413114847_DateForEntries")]
-    partial class DateForEntries
+    [Migration("20230413210444_SeedIt")]
+    partial class SeedIt
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
-
-            modelBuilder.Entity("JiraIssueProduct", b =>
-                {
-                    b.Property<Guid>("JiraIssuesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("JiraIssuesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("JiraIssueProduct");
-                });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Commitment", b =>
                 {
@@ -201,6 +186,11 @@ namespace TeamStatistics.Migrations
                         {
                             Id = 2,
                             Name = "To Do"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Unknown"
                         });
                 });
 
@@ -304,11 +294,16 @@ namespace TeamStatistics.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("JiraIssueId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JiraIssueId");
 
                     b.ToTable("Products");
 
@@ -377,6 +372,21 @@ namespace TeamStatistics.Migrations
                         {
                             Id = 13,
                             Name = "Other"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Create Referral API"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Research"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "JI"
                         });
                 });
 
@@ -425,21 +435,6 @@ namespace TeamStatistics.Migrations
                     b.HasIndex("QuarterId");
 
                     b.ToTable("Sprints");
-                });
-
-            modelBuilder.Entity("JiraIssueProduct", b =>
-                {
-                    b.HasOne("TeamStatistics.Data.Entities.JiraIssue", null)
-                        .WithMany()
-                        .HasForeignKey("JiraIssuesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TeamStatistics.Data.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Commitment", b =>
@@ -491,7 +486,7 @@ namespace TeamStatistics.Migrations
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssue", b =>
                 {
                     b.HasOne("TeamStatistics.Data.Entities.JiraProject", "JiraProject")
-                        .WithMany()
+                        .WithMany("JiraIssues")
                         .HasForeignKey("JiraProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -526,6 +521,13 @@ namespace TeamStatistics.Migrations
                     b.Navigation("Sprint");
                 });
 
+            modelBuilder.Entity("TeamStatistics.Data.Entities.Product", b =>
+                {
+                    b.HasOne("TeamStatistics.Data.Entities.JiraIssue", null)
+                        .WithMany("Products")
+                        .HasForeignKey("JiraIssueId");
+                });
+
             modelBuilder.Entity("TeamStatistics.Data.Entities.Sprint", b =>
                 {
                     b.HasOne("TeamStatistics.Data.Entities.Quarter", "Quarter")
@@ -535,6 +537,16 @@ namespace TeamStatistics.Migrations
                         .IsRequired();
 
                     b.Navigation("Quarter");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssue", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraProject", b =>
+                {
+                    b.Navigation("JiraIssues");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Quarter", b =>

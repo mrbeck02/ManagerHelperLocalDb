@@ -19,7 +19,11 @@ namespace TeamStatistics.Data.Entities
 
         public DateTime EndDate { get; set; }
 
+        #region Relationships
+
         public virtual ICollection<Sprint> Sprints { get; set; }
+
+        #endregion
 
         public Quarter()
         {

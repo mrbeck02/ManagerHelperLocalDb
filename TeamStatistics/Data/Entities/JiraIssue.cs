@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TeamStatistics.Data.Entities
 {
@@ -23,6 +24,7 @@ namespace TeamStatistics.Data.Entities
 
         #region Relationships
 
+        [ForeignKey("JiraProject")]
         public Guid JiraProjectId { get; set; }
 
         public virtual JiraProject JiraProject { get; set; }
