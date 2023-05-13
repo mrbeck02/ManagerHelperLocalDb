@@ -58,8 +58,11 @@ namespace TeamStatistics.CsvImporter
             {
                 if (unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).Count() == 0)
                 {
-                    unitOfWork.QuarterRepository.Insert(new Quarter() { Name = csvEntry.Quarter, Id = Guid.NewGuid() });
-                    unitOfWork.Save();
+                    if (csvEntry.Quarter.TryParseQuarterString(out int quarterNum, out int yearNum))
+                    {
+                        unitOfWork.QuarterRepository.Insert(new Quarter() { Name = csvEntry.Quarter, Id = Guid.NewGuid(), Year = yearNum, QuarterNumber = quarterNum });
+                        unitOfWork.Save();
+                    }
                 }
 
                 var quarter = unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).First();

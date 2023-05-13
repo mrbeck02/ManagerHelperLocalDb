@@ -15,6 +15,10 @@ namespace TeamStatistics.Data.Entities
 
         public string Name { get; set; } = "";
 
+        public int QuarterNumber { get; set; }
+
+        public int Year { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
