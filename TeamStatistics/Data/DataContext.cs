@@ -28,6 +28,8 @@ namespace TeamStatistics.Data
 
         public DbSet<JiraSupportIssue> JiraSupportIssues { get; set; }
 
+        public DbSet<JiraIssueProduct> JiraIssueProducts { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options) 
         {
         }
@@ -40,6 +42,8 @@ namespace TeamStatistics.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<JiraIssueProduct>().HasKey(jp => new { jp.JiraIssueId, jp.ProductId });
+
             modelBuilder.Entity<IssueStatus>().HasData(
                     new IssueStatus {  Id = (int)IssueStatusEnum.inprogress, Name = "In Progress" },
                     new IssueStatus { Id = (int)IssueStatusEnum.open, Name = "Open" },

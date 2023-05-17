@@ -11,7 +11,7 @@ using TeamStatistics.Data;
 namespace TeamStatistics.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230413194755_Initial")]
+    [Migration("20230516175348_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -230,6 +230,26 @@ namespace TeamStatistics.Migrations
                     b.ToTable("JiraIssues");
                 });
 
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssueProduct", b =>
+                {
+                    b.Property<Guid>("JiraIssueId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("JiraProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("JiraIssueId", "ProductId");
+
+                    b.HasIndex("JiraProjectId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("JiraIssueProducts");
+                });
+
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraProject", b =>
                 {
                     b.Property<Guid>("Id")
@@ -306,6 +326,88 @@ namespace TeamStatistics.Migrations
                     b.HasIndex("JiraIssueId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "CARA"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Crisis Management"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Critical Resource Tracker"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "EPMM"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "OpenBeds"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Treatment Connection"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "SMART on FHIR"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Availability API"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Referral API"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Cognito"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Launcher"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Dynatrace"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Other"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Create Referral API"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Research"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "JI"
+                        });
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Quarter", b =>
@@ -321,8 +423,14 @@ namespace TeamStatistics.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("QuarterNumber")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -404,12 +512,35 @@ namespace TeamStatistics.Migrations
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssue", b =>
                 {
                     b.HasOne("TeamStatistics.Data.Entities.JiraProject", "JiraProject")
-                        .WithMany("JiraIssues")
+                        .WithMany()
                         .HasForeignKey("JiraProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("JiraProject");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssueProduct", b =>
+                {
+                    b.HasOne("TeamStatistics.Data.Entities.JiraIssue", "JiraIssue")
+                        .WithMany()
+                        .HasForeignKey("JiraIssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeamStatistics.Data.Entities.JiraProject", null)
+                        .WithMany("JiraIssueProducts")
+                        .HasForeignKey("JiraProjectId");
+
+                    b.HasOne("TeamStatistics.Data.Entities.Product", "Product")
+                        .WithMany("JiraIssueProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JiraIssue");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraSupportIssue", b =>
@@ -464,7 +595,12 @@ namespace TeamStatistics.Migrations
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraProject", b =>
                 {
-                    b.Navigation("JiraIssues");
+                    b.Navigation("JiraIssueProducts");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.Product", b =>
+                {
+                    b.Navigation("JiraIssueProducts");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Quarter", b =>

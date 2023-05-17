@@ -227,6 +227,26 @@ namespace TeamStatistics.Migrations
                     b.ToTable("JiraIssues");
                 });
 
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssueProduct", b =>
+                {
+                    b.Property<Guid>("JiraIssueId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("JiraProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("JiraIssueId", "ProductId");
+
+                    b.HasIndex("JiraProjectId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("JiraIssueProducts");
+                });
+
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraProject", b =>
                 {
                     b.Property<Guid>("Id")
@@ -400,8 +420,14 @@ namespace TeamStatistics.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("QuarterNumber")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -483,12 +509,35 @@ namespace TeamStatistics.Migrations
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssue", b =>
                 {
                     b.HasOne("TeamStatistics.Data.Entities.JiraProject", "JiraProject")
-                        .WithMany("JiraIssues")
+                        .WithMany()
                         .HasForeignKey("JiraProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("JiraProject");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.JiraIssueProduct", b =>
+                {
+                    b.HasOne("TeamStatistics.Data.Entities.JiraIssue", "JiraIssue")
+                        .WithMany()
+                        .HasForeignKey("JiraIssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TeamStatistics.Data.Entities.JiraProject", null)
+                        .WithMany("JiraIssueProducts")
+                        .HasForeignKey("JiraProjectId");
+
+                    b.HasOne("TeamStatistics.Data.Entities.Product", "Product")
+                        .WithMany("JiraIssueProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JiraIssue");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraSupportIssue", b =>
@@ -543,7 +592,12 @@ namespace TeamStatistics.Migrations
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.JiraProject", b =>
                 {
-                    b.Navigation("JiraIssues");
+                    b.Navigation("JiraIssueProducts");
+                });
+
+            modelBuilder.Entity("TeamStatistics.Data.Entities.Product", b =>
+                {
+                    b.Navigation("JiraIssueProducts");
                 });
 
             modelBuilder.Entity("TeamStatistics.Data.Entities.Quarter", b =>
