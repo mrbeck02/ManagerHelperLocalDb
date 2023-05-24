@@ -11,7 +11,7 @@ using TeamStatistics.Data;
 namespace TeamStatistics.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230516175348_Initial")]
+    [Migration("20230524152859_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
