@@ -55,6 +55,19 @@ namespace TeamStatistics.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Quarters",
                 columns: table => new
                 {
@@ -116,22 +129,27 @@ namespace TeamStatistics.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "JiraIssueProduct",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    JiraIssueId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    JiraIssuesId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProductsId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_JiraIssueProduct", x => new { x.JiraIssuesId, x.ProductsId });
                     table.ForeignKey(
-                        name: "FK_Products_JiraIssues_JiraIssueId",
-                        column: x => x.JiraIssueId,
+                        name: "FK_JiraIssueProduct_JiraIssues_JiraIssuesId",
+                        column: x => x.JiraIssuesId,
                         principalTable: "JiraIssues",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JiraIssueProduct_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -210,36 +228,6 @@ namespace TeamStatistics.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JiraIssueProducts",
-                columns: table => new
-                {
-                    JiraIssueId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    JiraProjectId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JiraIssueProducts", x => new { x.JiraIssueId, x.ProductId });
-                    table.ForeignKey(
-                        name: "FK_JiraIssueProducts_JiraIssues_JiraIssueId",
-                        column: x => x.JiraIssueId,
-                        principalTable: "JiraIssues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JiraIssueProducts_JiraProjects_JiraProjectId",
-                        column: x => x.JiraProjectId,
-                        principalTable: "JiraProjects",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_JiraIssueProducts_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Entries",
                 columns: table => new
                 {
@@ -287,25 +275,25 @@ namespace TeamStatistics.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "JiraIssueId", "Name" },
+                columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, null, "CARA" },
-                    { 2, null, "Crisis Management" },
-                    { 3, null, "Critical Resource Tracker" },
-                    { 4, null, "EPMM" },
-                    { 5, null, "OpenBeds" },
-                    { 6, null, "Treatment Connection" },
-                    { 7, null, "SMART on FHIR" },
-                    { 8, null, "Availability API" },
-                    { 9, null, "Referral API" },
-                    { 10, null, "Cognito" },
-                    { 11, null, "Launcher" },
-                    { 12, null, "Dynatrace" },
-                    { 13, null, "Other" },
-                    { 14, null, "Create Referral API" },
-                    { 15, null, "Research" },
-                    { 16, null, "JI" }
+                    { 1, "CARA" },
+                    { 2, "Crisis Management" },
+                    { 3, "Critical Resource Tracker" },
+                    { 4, "EPMM" },
+                    { 5, "OpenBeds" },
+                    { 6, "Treatment Connection" },
+                    { 7, "SMART on FHIR" },
+                    { 8, "Availability API" },
+                    { 9, "Referral API" },
+                    { 10, "Cognito" },
+                    { 11, "Launcher" },
+                    { 12, "Dynatrace" },
+                    { 13, "Other" },
+                    { 14, "Create Referral API" },
+                    { 15, "Research" },
+                    { 16, "JI" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -334,14 +322,9 @@ namespace TeamStatistics.Migrations
                 column: "IssueStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JiraIssueProducts_JiraProjectId",
-                table: "JiraIssueProducts",
-                column: "JiraProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JiraIssueProducts_ProductId",
-                table: "JiraIssueProducts",
-                column: "ProductId");
+                name: "IX_JiraIssueProduct_ProductsId",
+                table: "JiraIssueProduct",
+                column: "ProductsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JiraIssues_JiraProjectId",
@@ -364,11 +347,6 @@ namespace TeamStatistics.Migrations
                 column: "SprintId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_JiraIssueId",
-                table: "Products",
-                column: "JiraIssueId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sprints_QuarterId",
                 table: "Sprints",
                 column: "QuarterId");
@@ -381,7 +359,7 @@ namespace TeamStatistics.Migrations
                 name: "Entries");
 
             migrationBuilder.DropTable(
-                name: "JiraIssueProducts");
+                name: "JiraIssueProduct");
 
             migrationBuilder.DropTable(
                 name: "JiraSupportIssues");
@@ -399,16 +377,16 @@ namespace TeamStatistics.Migrations
                 name: "Developers");
 
             migrationBuilder.DropTable(
-                name: "Sprints");
-
-            migrationBuilder.DropTable(
                 name: "JiraIssues");
 
             migrationBuilder.DropTable(
-                name: "Quarters");
+                name: "Sprints");
 
             migrationBuilder.DropTable(
                 name: "JiraProjects");
+
+            migrationBuilder.DropTable(
+                name: "Quarters");
         }
     }
 }

@@ -13,12 +13,6 @@ namespace TeamStatistics.Data.Entities
 
         public string Domain { get; set; } = "";
 
-        #region Relationships
-
-        public virtual ICollection<JiraIssueProduct> JiraIssueProducts { get; set; } = new List<JiraIssueProduct>();
-
-        #endregion
-
         public JiraProject() 
         { 
         }
