@@ -1,21 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.EntityFrameworkCore.Sqlite.Update.Internal;
-using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
 using TeamStatistics.CsvImporter;
 using TeamStatistics.DAL;
 using TeamStatistics.Data;
-using TeamStatistics.Data.Entities;
 using TeamStatistics.ViewModels;
 
 namespace TeamStatistics
