@@ -28,6 +28,8 @@ namespace ManagerHelperLocalDb.Data
 
         public DbSet<JiraSupportIssue> JiraSupportIssues { get; set; }
 
+        public DbSet<Team> Teams { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options) 
         {
         }

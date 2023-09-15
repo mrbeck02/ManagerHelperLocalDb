@@ -7,15 +7,16 @@ namespace ManagerHelperLocalDb.DAL
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private DataContext _dataContext;
-        private GenericRepository<Commitment> _commitmentRepository;
-        private GenericRepository<Entry> _entryRepository;
-        private GenericRepository<Developer> _developerRepository;
-        private GenericRepository<Quarter> _quarterRepository;
-        private GenericRepository<Sprint> _sprintRepository;
-        private GenericRepository<JiraIssue> _jiraIssueRepository;
-        private GenericRepository<Product> _productRepository;
-        private GenericRepository<JiraProject> _jiraProjectRepository;
-        public GenericRepository<IssueStatus> _issueStatusRepository;
+        private GenericRepository<Commitment>? _commitmentRepository;
+        private GenericRepository<Entry>? _entryRepository;
+        private GenericRepository<Developer>? _developerRepository;
+        private GenericRepository<Quarter>? _quarterRepository;
+        private GenericRepository<Sprint>? _sprintRepository;
+        private GenericRepository<JiraIssue>? _jiraIssueRepository;
+        private GenericRepository<Product>? _productRepository;
+        private GenericRepository<JiraProject>? _jiraProjectRepository;
+        public GenericRepository<IssueStatus>? _issueStatusRepository;
+        public GenericRepository<Team>? _teamRepository;
 
         public UnitOfWork(DataContext dataContext)
         {
@@ -38,6 +39,8 @@ namespace ManagerHelperLocalDb.DAL
         public IGenericRepository<JiraProject> JiraProjectRepository { get => _jiraProjectRepository ??= new GenericRepository<JiraProject>(_dataContext); }
 
         public IGenericRepository<IssueStatus> IssueStatusRepository { get => _issueStatusRepository ??= new GenericRepository<IssueStatus>(_dataContext); }
+
+        public IGenericRepository<Team> TeamRepository { get => _teamRepository ??= new GenericRepository<Team>(_dataContext); }
 
         public void Save()
         {

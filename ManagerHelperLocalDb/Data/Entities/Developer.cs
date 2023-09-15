@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ManagerHelperLocalDb.Data.Entities
@@ -17,6 +18,12 @@ namespace ManagerHelperLocalDb.Data.Entities
         public DateTime DateModifiedUtc { get; set; }
 
         public string TimeZone { get; set; } = "";
+
+        #region Relationships
+
+        public virtual ICollection<Team> Teams { get; set; } = new List<Team>();
+
+        #endregion
 
         public string GetFullName()
         {
