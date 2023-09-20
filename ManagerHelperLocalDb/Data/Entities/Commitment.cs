@@ -15,13 +15,13 @@ namespace ManagerHelperLocalDb.Data.Entities
 
         public bool WasInitiallyCommitted { get; set; }
 
-        public string Notes { get; set; } // Notes about the commitment and why it might not have been completed
+        public string? Notes { get; set; }
 
         public DateTime DateCreatedUtc { get; set; }
 
         public DateTime DateModifiedUtc { get; set; }
 
-        public string TimeZone { get; set; } = "";
+        public string? TimeZone { get; set; }
 
 
         #region Relationships
@@ -29,17 +29,17 @@ namespace ManagerHelperLocalDb.Data.Entities
         [ForeignKey("Sprint")]
         public Guid SprintId { get; set; }
 
-        public virtual Sprint Sprint { get; set; }
+        public virtual Sprint Sprint { get; set; } = null!; // these can be null if we use laze loading
 
         [ForeignKey("JiraIssue")]
         public Guid JiraIssueId { get; set; }
 
-        public virtual JiraIssue JiraIssue { get; set; }
+        public virtual JiraIssue JiraIssue { get; set; } = null!;
 
         [ForeignKey("Developer")]
         public Guid DeveloperId { get; set; }
 
-        public virtual Developer Developer { get; set; }
+        public virtual Developer Developer { get; set; } = null!;
 
         #endregion
     }

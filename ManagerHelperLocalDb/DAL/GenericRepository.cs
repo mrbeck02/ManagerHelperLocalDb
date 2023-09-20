@@ -20,8 +20,8 @@ namespace ManagerHelperLocalDb.DAL
         }
 
         public virtual IEnumerable<TEntity> Get(
-            Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Expression<Func<TEntity, bool>>? filter = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null,
             string includeProperties = "")
         {
             IQueryable<TEntity> query = _dbSet;
@@ -47,7 +47,7 @@ namespace ManagerHelperLocalDb.DAL
             }
         }
 
-        public virtual TEntity GetByID(object id)
+        public virtual TEntity? GetByID(object id)
         {
             return _dbSet.Find(id);
         }
@@ -59,8 +59,12 @@ namespace ManagerHelperLocalDb.DAL
 
         public virtual void Delete(object id)
         {
-            TEntity entityToDelete = _dbSet.Find(id);
-            Delete(entityToDelete);
+            TEntity? entityToDelete = _dbSet.Find(id);
+
+            if (entityToDelete != null)
+            {
+                Delete(entityToDelete);
+            }
         }
 
         public virtual void Delete(TEntity entityToDelete)

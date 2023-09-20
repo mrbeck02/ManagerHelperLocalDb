@@ -24,7 +24,7 @@ namespace ManagerHelperLocalDb.Data.Entities
         [ForeignKey("Quarter")]
         public Guid QuarterId { get; set; }
 
-        public virtual Quarter Quarter { get; set; }
+        public virtual Quarter Quarter { get; set; } = null!;
 
         #endregion
     }

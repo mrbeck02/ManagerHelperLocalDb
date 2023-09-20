@@ -5,14 +5,14 @@ namespace ManagerHelperLocalDb.ViewModels.Support
 {
     public class RelayCommand : ICommand
     {
-        readonly Action<object> _execute;
-        private readonly Func<object, bool> _canExecute;
+        readonly Action<object?> _execute;
+        private readonly Func<object?, bool>? _canExecute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand"/> class.
         /// </summary>
         /// <param name="execute">The method to execute that has a single object parameter.</param>
-        public RelayCommand(Action<object> execute)
+        public RelayCommand(Action<object?> execute)
             : this(execute, null)
         {
         }
@@ -23,7 +23,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// <param name="execute">The method to execute that has a single object parameter.</param>
         /// <param name="canExecute">The can execute.</param>
         /// <exception cref="System.ArgumentNullException">execute</exception>
-        public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
+        public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
@@ -38,7 +38,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// <returns>
         /// true if this command can be executed; otherwise, false.
         /// </returns>
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             bool canExecute = _canExecute == null ? true : _canExecute(parameter);
             return canExecute;
@@ -47,7 +47,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.
         /// </summary>
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
@@ -57,7 +57,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _execute(parameter);
         }
@@ -67,15 +67,14 @@ namespace ManagerHelperLocalDb.ViewModels.Support
 
     public class RelayCommand<T> : ICommand, IRaiseCanExecuteChanged
     {
-        private readonly Action<T> _execute = null;
-        //private readonly Predicate<T> _canExecute = null;
-        private readonly Func<T, bool> _canExecute;
+        private readonly Action<T?> _execute;
+        private readonly Func<T?, bool>? _canExecute;
 
         /// <summary>
         /// Creates a new command that can always execute.
         /// </summary>
         /// <param name="execute">The execution logic.</param>
-        public RelayCommand(Action<T> execute)
+        public RelayCommand(Action<T?> execute)
             : this(execute, null)
         {
         }
@@ -85,7 +84,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// </summary>
         /// <param name="execute">The execution logic.</param>
         /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute)
+        public RelayCommand(Action<T?> execute, Func<T?, bool>? canExecute)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
@@ -98,12 +97,12 @@ namespace ManagerHelperLocalDb.ViewModels.Support
 
         #region ICommand Members
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
+            return _canExecute == null ? true : _canExecute((T?)parameter);
         }
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add
             {
@@ -117,9 +116,9 @@ namespace ManagerHelperLocalDb.ViewModels.Support
             }
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
-            _execute((T)parameter);
+            _execute((T?)parameter);
         }
 
         #endregion

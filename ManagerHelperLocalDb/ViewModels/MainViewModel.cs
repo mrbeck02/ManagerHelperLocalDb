@@ -36,8 +36,8 @@ namespace ManagerHelperLocalDb.ViewModels
             }
         }
 
-        private ObservableCollection<ComboBoxItemViewModel<Developer>> _developerOptions;
-        private ComboBoxItemViewModel<Developer> _selectedDeveloperOption;
+        private ObservableCollection<ComboBoxItemViewModel<Developer>> _developerOptions = new ObservableCollection<ComboBoxItemViewModel<Developer>>();
+        private ComboBoxItemViewModel<Developer>? _selectedDeveloperOption;
 
         public ObservableCollection<ComboBoxItemViewModel<Developer>> DeveloperOptions
         {
@@ -49,7 +49,7 @@ namespace ManagerHelperLocalDb.ViewModels
             }
         }
 
-        public ComboBoxItemViewModel<Developer> SelectedDeveloperOption
+        public ComboBoxItemViewModel<Developer>? SelectedDeveloperOption
         {
             get => _selectedDeveloperOption;
             set
@@ -90,13 +90,19 @@ namespace ManagerHelperLocalDb.ViewModels
 
         #region Commands
 
-        public RelayCommand _importCsvCommand;
+        private RelayCommand? _importCsvCommand;
         private bool disposedValue;
 
         public RelayCommand ImportCsvCommand => _importCsvCommand ??= new RelayCommand(importCsvCommand);
 
-        private void importCsvCommand(object obj)
+        private void importCsvCommand(object? obj)
         {
+            if (SelectedDeveloperOption == null)
+            {
+                MessageBox.Show("No developer selected.", "Caption", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             try
             {
                 var entries = _reader.ReadStatistics(CsvPath);

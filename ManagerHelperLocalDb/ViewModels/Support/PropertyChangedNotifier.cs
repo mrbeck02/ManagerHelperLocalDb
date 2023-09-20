@@ -6,7 +6,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
 {
     public class PropertyChangedNotifier : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Called when [property changed].

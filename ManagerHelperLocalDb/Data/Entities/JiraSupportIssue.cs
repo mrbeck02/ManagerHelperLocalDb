@@ -23,17 +23,17 @@ namespace ManagerHelperLocalDb.Data.Entities
         [ForeignKey("Sprint")]
         public Guid SprintId { get; set; }
 
-        public virtual Sprint Sprint { get; set; }
+        public virtual Sprint Sprint { get; set; } = null!;
 
         [ForeignKey("JiraIssueId")]
         public Guid JiraIssueId { get; set; }
 
-        public virtual JiraIssue JiraIssue { get; set; }
+        public virtual JiraIssue JiraIssue { get; set; } = null!;
 
         [ForeignKey("DeveloperId")]
         public Guid DeveloperId { get; set; }
 
-        public virtual Developer Developer { get; set; }
+        public virtual Developer Developer { get; set; } = null!;
 
         #endregion
 
