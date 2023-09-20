@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ManagerHelperLocalDb.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
-using ManagerHelperLocalDb.Data.Entities;
 
 namespace ManagerHelperLocalDb.Data
 {
@@ -30,7 +30,7 @@ namespace ManagerHelperLocalDb.Data
 
         public DbSet<Team> Teams { get; set; }
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options) 
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
 
@@ -43,7 +43,7 @@ namespace ManagerHelperLocalDb.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IssueStatus>().HasData(
-                    new IssueStatus {  Id = (int)IssueStatusEnum.inprogress, Name = "In Progress" },
+                    new IssueStatus { Id = (int)IssueStatusEnum.inprogress, Name = "In Progress" },
                     new IssueStatus { Id = (int)IssueStatusEnum.open, Name = "Open" },
                     new IssueStatus { Id = (int)IssueStatusEnum.readyforrelease, Name = "Ready for Release" },
                     new IssueStatus { Id = (int)IssueStatusEnum.readyfortest, Name = "Ready for Test" },

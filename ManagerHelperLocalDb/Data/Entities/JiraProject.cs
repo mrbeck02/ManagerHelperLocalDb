@@ -12,8 +12,8 @@ namespace ManagerHelperLocalDb.Data.Entities
 
         public string Domain { get; set; } = "";
 
-        public JiraProject() 
-        { 
+        public JiraProject()
+        {
         }
     }
 }

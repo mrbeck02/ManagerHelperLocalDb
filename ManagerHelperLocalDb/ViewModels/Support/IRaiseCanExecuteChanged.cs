@@ -14,8 +14,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         {
             var canExecuteChanged = command as IRaiseCanExecuteChanged;
 
-            if (canExecuteChanged != null)
-                canExecuteChanged.RaiseCanExecuteChanged();
+            canExecuteChanged?.RaiseCanExecuteChanged();
         }
     }
 }

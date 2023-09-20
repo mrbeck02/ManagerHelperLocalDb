@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace ManagerHelperLocalDb.Extensions
 {
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
         /// <summary>
         /// Use this to parse text that contains a 4 digit year and a quarter in the form of Q# or q#
@@ -27,7 +27,7 @@ namespace ManagerHelperLocalDb.Extensions
 
                 var quarterPart = Regex.Match(quarterText, quarterRegex).Value;
 
-                var qParseResult = int.TryParse(Regex.Match(quarterPart, @"\d+").Value, out int quarterNumber);
+                bool qParseResult = int.TryParse(QuarterPart().Match(quarterPart).Value, out int quarterNumber);
 
                 if (!qParseResult) return false;
 
@@ -45,5 +45,8 @@ namespace ManagerHelperLocalDb.Extensions
                 return false;
             }
         }
+
+        [GeneratedRegex("\\d+")]
+        private static partial Regex QuarterPart();
     }
 }

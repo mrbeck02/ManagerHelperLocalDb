@@ -6,7 +6,7 @@ namespace ManagerHelperLocalDb.Data.Entities
 {
     public class Entry
     {
-        [Key]   
+        [Key]
         public Guid Id { get; set; }
 
         public DateTime DateEntered { get; set; }
