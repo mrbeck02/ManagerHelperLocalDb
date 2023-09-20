@@ -132,7 +132,7 @@ namespace ManagerHelperLocalDb.ViewModels
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        int IComparable<ComboBoxItemViewModel<T>>.CompareTo(ComboBoxItemViewModel<T> other)
+        int IComparable<ComboBoxItemViewModel<T>>.CompareTo(ComboBoxItemViewModel<T>? other)
         {
             // put null items at the bottom of the list
             if (other == null)

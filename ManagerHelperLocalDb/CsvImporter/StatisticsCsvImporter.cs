@@ -155,6 +155,12 @@ namespace ManagerHelperLocalDb.CsvImporter
 
             var commitment = unitOfWork.CommitmentRepository.GetByID(commitmentId);
 
+            if (commitment == null)
+            {
+                Console.WriteLine("Commitment not found.  Unable to add entry.");
+                return;
+            }
+
             var dateEntered = commitment.Sprint.StartDate.FindDateOfSprintDay(dayOfSprint);
 
             // For imports, we should only have one entry per day per issue

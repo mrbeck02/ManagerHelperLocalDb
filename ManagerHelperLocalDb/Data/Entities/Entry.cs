@@ -26,12 +26,12 @@ namespace ManagerHelperLocalDb.Data.Entities
         [ForeignKey("IssueStatus")]
         public int IssueStatusId { get; set; }
 
-        public virtual IssueStatus IssueStatus { get; set; }
+        public virtual IssueStatus IssueStatus { get; set; } = null!;
 
         [ForeignKey("CommitmentId")]
         public Guid CommitmentId { get; set; }
 
-        public virtual Commitment Commitment { get; set; }
+        public virtual Commitment Commitment { get; set; } = null!;
 
         #endregion
     }

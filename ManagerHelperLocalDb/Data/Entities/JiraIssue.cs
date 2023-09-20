@@ -10,7 +10,7 @@ namespace ManagerHelperLocalDb.Data.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public string Number { get; set; } = "";// 14354
+        public string? Number { get; set; }
 
         public int StoryPoints { get; set; }
 
@@ -20,14 +20,14 @@ namespace ManagerHelperLocalDb.Data.Entities
 
         public DateTime DateModifiedUtc { get; set; }
 
-        public string TimeZone { get; set; } = "";
+        public string? TimeZone { get; set; }
 
         #region Relationships
 
         [ForeignKey("JiraProject")]
         public Guid JiraProjectId { get; set; }
 
-        public virtual JiraProject JiraProject { get; set; }
+        public virtual JiraProject JiraProject { get; set; } = null!;
 
         public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
