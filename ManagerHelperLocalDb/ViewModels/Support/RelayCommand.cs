@@ -40,7 +40,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
         /// </returns>
         public bool CanExecute(object? parameter)
         {
-            bool canExecute = _canExecute == null ? true : _canExecute(parameter);
+            bool canExecute = _canExecute == null || _canExecute(parameter);
             return canExecute;
         }
 
@@ -99,7 +99,7 @@ namespace ManagerHelperLocalDb.ViewModels.Support
 
         public bool CanExecute(object? parameter)
         {
-            return _canExecute == null ? true : _canExecute((T?)parameter);
+            return _canExecute == null || _canExecute((T?)parameter);
         }
 
         public event EventHandler? CanExecuteChanged

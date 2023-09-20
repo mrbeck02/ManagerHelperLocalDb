@@ -1,12 +1,12 @@
-﻿using System;
-using ManagerHelperLocalDb.Data;
+﻿using ManagerHelperLocalDb.Data;
 using ManagerHelperLocalDb.Data.Entities;
+using System;
 
 namespace ManagerHelperLocalDb.DAL
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private DataContext _dataContext;
+        private readonly DataContext _dataContext;
         private GenericRepository<Commitment>? _commitmentRepository;
         private GenericRepository<Entry>? _entryRepository;
         private GenericRepository<Developer>? _developerRepository;

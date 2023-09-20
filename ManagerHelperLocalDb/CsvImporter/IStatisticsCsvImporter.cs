@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using ManagerHelperLocalDb.DAL;
+﻿using ManagerHelperLocalDb.DAL;
 using ManagerHelperLocalDb.Data.Entities;
+using System.Collections.Generic;
 
 namespace ManagerHelperLocalDb.CsvImporter
 {

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ManagerHelperLocalDb.DAL;
+﻿using ManagerHelperLocalDb.DAL;
 using ManagerHelperLocalDb.Data.Entities;
 using ManagerHelperLocalDb.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ManagerHelperLocalDb.CsvImporter
 {
@@ -17,15 +17,15 @@ namespace ManagerHelperLocalDb.CsvImporter
             if (csvEntries == null)
                 return;
 
-            foreach (var csvEntry in csvEntries) 
+            foreach (var csvEntry in csvEntries)
             {
                 // If there isn't a Jira issue, there isn't a commitment
                 if (string.IsNullOrEmpty(csvEntry.Jira))
                     continue;
 
-                ensureSprintExists(unitOfWork, csvEntry);
-                ensureJiraIssueExists(unitOfWork, csvEntry);
-                ensureCommitmentExists(unitOfWork, developer, csvEntry);
+                EnsureSprintExists(unitOfWork, csvEntry);
+                EnsureJiraIssueExists(unitOfWork, csvEntry);
+                EnsureCommitmentExists(unitOfWork, developer, csvEntry);
 
                 var commitment = unitOfWork.CommitmentRepository.Get(c => string.Compare(c.Sprint.Name, csvEntry.Sprint) == 0 &&
                     string.Compare(c.Sprint.Quarter.Name, csvEntry.Quarter) == 0 &&
@@ -33,16 +33,16 @@ namespace ManagerHelperLocalDb.CsvImporter
                     c.Developer.Id == developer.Id).First();
 
                 // Each day is an entry for the commitment
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day1, 1);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day2, 2);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day3, 3);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day4, 4);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day5, 5);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day6, 6);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day7, 7);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day8, 8);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day9, 9);
-                addEntry(unitOfWork, commitment.Id, csvEntry.Day10, 10);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day1, 1);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day2, 2);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day3, 3);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day4, 4);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day5, 5);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day6, 6);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day7, 7);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day8, 8);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day9, 9);
+                AddEntry(unitOfWork, commitment.Id, csvEntry.Day10, 10);
             }
         }
 
@@ -51,12 +51,12 @@ namespace ManagerHelperLocalDb.CsvImporter
         /// </summary>
         /// <param name="unitOfWork"></param>
         /// <param name="csvEntry"></param>
-        private void ensureSprintExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
+        private static void EnsureSprintExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
         {
             // If sprint doesn't exist...
-            if (unitOfWork.SprintRepository.Get(s => string.Compare(s.Name, csvEntry.Sprint) == 0).Count() == 0)
+            if (!unitOfWork.SprintRepository.Get(s => string.Compare(s.Name, csvEntry.Sprint) == 0).Any())
             {
-                if (unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).Count() == 0)
+                if (!unitOfWork.QuarterRepository.Get(q => string.Compare(q.Name, csvEntry.Quarter) == 0).Any())
                 {
                     if (csvEntry.Quarter.TryParseQuarterString(out int quarterNum, out int yearNum))
                     {
@@ -71,20 +71,21 @@ namespace ManagerHelperLocalDb.CsvImporter
             }
         }
 
-        private void ensureJiraIssueExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
+        private static void EnsureJiraIssueExists(IUnitOfWork unitOfWork, StatisticsCsvEntry csvEntry)
         {
-            if (unitOfWork.JiraIssueRepository.Get(j => string.Compare(j.Number, csvEntry.Jira) == 0).Count() > 0)
+            if (unitOfWork.JiraIssueRepository.Get(j => string.Compare(j.Number, csvEntry.Jira) == 0).Any())
                 return;
 
             var projects = unitOfWork.JiraProjectRepository.Get();
 
-            var jiraIssue = new JiraIssue() {
+            var jiraIssue = new JiraIssue()
+            {
                 Id = Guid.NewGuid(),
                 DateCreatedUtc = DateTime.UtcNow,
                 Number = csvEntry.Jira,
                 DateModifiedUtc = DateTime.UtcNow,
                 TimeZone = TimeZoneInfo.Local.StandardName,
-                StoryPoints = csvEntry.SP.HasValue ? csvEntry.SP.Value : 0,
+                StoryPoints = csvEntry.SP ?? 0,
                 JiraProjectId = projects.First().Id
             };
 
@@ -112,13 +113,13 @@ namespace ManagerHelperLocalDb.CsvImporter
             unitOfWork.Save();
         }
 
-        private void ensureCommitmentExists(IUnitOfWork unitOfWork, Developer developer, StatisticsCsvEntry csvEntry)
+        private static void EnsureCommitmentExists(IUnitOfWork unitOfWork, Developer developer, StatisticsCsvEntry csvEntry)
         {
             // Don't add commitment if it's already been added
             if (unitOfWork.CommitmentRepository.Get(c => string.Compare(c.Sprint.Name, csvEntry.Sprint) == 0 &&
                     string.Compare(c.Sprint.Quarter.Name, csvEntry.Quarter) == 0 &&
                     string.Compare(c.JiraIssue.Number, csvEntry.Jira) == 0 &&
-                    c.Developer.Id == developer.Id).Count() > 0)
+                    c.Developer.Id == developer.Id).Any())
                 return;
 
             // Each row is a commitment that was made.
@@ -148,7 +149,7 @@ namespace ManagerHelperLocalDb.CsvImporter
         /// <param name="commitmentId"></param>
         /// <param name="dayText"></param>
         /// <param name="dayOfSprint"></param>
-        private void addEntry(IUnitOfWork unitOfWork, Guid commitmentId, string dayText, int dayOfSprint)
+        private static void AddEntry(IUnitOfWork unitOfWork, Guid commitmentId, string dayText, int dayOfSprint)
         {
             if (string.IsNullOrEmpty(dayText))
                 return;
@@ -168,15 +169,10 @@ namespace ManagerHelperLocalDb.CsvImporter
                 e.DateEntered.Year == dateEntered.Year &&
                 e.DateEntered.Month == dateEntered.Year &&
                 e.DateEntered.Day == dateEntered.Day &&
-                e.CommitmentId == commitment.Id).Count() > 0)
+                e.CommitmentId == commitment.Id).Any())
                 return;
 
-            var issueStatus = unitOfWork.IssueStatusRepository.Get(s => string.Compare(s.Name, dayText) == 0).FirstOrDefault();
-            
-            if (issueStatus == null) 
-            {
-                issueStatus = unitOfWork.IssueStatusRepository.Get(s => s.Name == "Unknown").First();
-            }
+            var issueStatus = unitOfWork.IssueStatusRepository.Get(s => string.Compare(s.Name, dayText) == 0).FirstOrDefault() ?? unitOfWork.IssueStatusRepository.Get(s => s.Name == "Unknown").First();
 
             var entry = new Entry()
             {

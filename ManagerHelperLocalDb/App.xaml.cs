@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ManagerHelperLocalDb.CsvImporter;
+using ManagerHelperLocalDb.DAL;
+using ManagerHelperLocalDb.Data;
+using ManagerHelperLocalDb.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using ManagerHelperLocalDb.CsvImporter;
-using ManagerHelperLocalDb.DAL;
-using ManagerHelperLocalDb.Data;
-using ManagerHelperLocalDb.ViewModels;
 
 namespace ManagerHelperLocalDb
 {
@@ -16,16 +16,16 @@ namespace ManagerHelperLocalDb
     /// </summary>
     public partial class App : Application
     {
-        private IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public App()
         {
             var services = new ServiceCollection();
-            configureServices(services);
+            ConfigureServices(services);
             _serviceProvider = services.BuildServiceProvider();
         }
 
-        private void configureServices(ServiceCollection services)
+        private static void ConfigureServices(ServiceCollection services)
         {
             services.AddDbContext<DataContext>(options =>
             {

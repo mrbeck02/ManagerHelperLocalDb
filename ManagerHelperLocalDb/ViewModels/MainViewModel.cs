@@ -1,23 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using ManagerHelperLocalDb.CsvImporter;
+﻿using ManagerHelperLocalDb.CsvImporter;
 using ManagerHelperLocalDb.DAL;
 using ManagerHelperLocalDb.Data;
 using ManagerHelperLocalDb.Data.Entities;
 using ManagerHelperLocalDb.ViewModels.Support;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 
 namespace ManagerHelperLocalDb.ViewModels
 {
     public class MainViewModel : PropertyChangedNotifier, IMainViewModel, IDisposable
     {
-        private IStatisticsCsvImporter _statisticsCsvImporter;
-        private IDbContextFactory<DataContext> _contextFactory;
-        private IStatisticsCsvReader _reader;
+        private readonly IStatisticsCsvImporter _statisticsCsvImporter;
+        private readonly IDbContextFactory<DataContext> _contextFactory;
+        private readonly IStatisticsCsvReader _reader;
 
         #region Properties
 
@@ -36,7 +35,7 @@ namespace ManagerHelperLocalDb.ViewModels
             }
         }
 
-        private ObservableCollection<ComboBoxItemViewModel<Developer>> _developerOptions = new ObservableCollection<ComboBoxItemViewModel<Developer>>();
+        private ObservableCollection<ComboBoxItemViewModel<Developer>> _developerOptions = new();
         private ComboBoxItemViewModel<Developer>? _selectedDeveloperOption;
 
         public ObservableCollection<ComboBoxItemViewModel<Developer>> DeveloperOptions
@@ -93,9 +92,9 @@ namespace ManagerHelperLocalDb.ViewModels
         private RelayCommand? _importCsvCommand;
         private bool disposedValue;
 
-        public RelayCommand ImportCsvCommand => _importCsvCommand ??= new RelayCommand(importCsvCommand);
+        public RelayCommand ImportCsvCommand => _importCsvCommand ??= new RelayCommand(ImportCsv);
 
-        private void importCsvCommand(object? obj)
+        private void ImportCsv(object? obj)
         {
             if (SelectedDeveloperOption == null)
             {
@@ -107,7 +106,8 @@ namespace ManagerHelperLocalDb.ViewModels
             {
                 var entries = _reader.ReadStatistics(CsvPath);
 
-                if (entries.Count == 0) { 
+                if (entries.Count == 0)
+                {
                     MessageBox.Show($"No entries found in file {CsvPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     return;
                 }
@@ -131,12 +131,12 @@ namespace ManagerHelperLocalDb.ViewModels
             _reader = reader;
             _contextFactory = contextFactory;
 
-            initializeViewModel();
+            InitializeViewModel();
         }
 
-        private void initializeViewModel()
+        private void InitializeViewModel()
         {
-            _developerOptions = createDeveloperOptions();
+            _developerOptions = CreateDeveloperOptions();
 
             if (_developerOptions.Count > 0)
             {
@@ -145,7 +145,7 @@ namespace ManagerHelperLocalDb.ViewModels
             }
         }
 
-        protected ObservableCollection<ComboBoxItemViewModel<Developer>> createDeveloperOptions()
+        protected ObservableCollection<ComboBoxItemViewModel<Developer>> CreateDeveloperOptions()
         {
             var unitOfWork = new UnitOfWork(_contextFactory.CreateDbContext());
             var allOptions = new List<ComboBoxItemViewModel<Developer>>();

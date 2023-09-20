@@ -1,7 +1,7 @@
-﻿using NaturalSort.Extension;
+﻿using ManagerHelperLocalDb.ViewModels.Support;
+using NaturalSort.Extension;
 using System;
 using System.Collections.Generic;
-using ManagerHelperLocalDb.ViewModels.Support;
 
 namespace ManagerHelperLocalDb.ViewModels
 {
@@ -74,7 +74,7 @@ namespace ManagerHelperLocalDb.ViewModels
             get { return _value; }
             private set
             {
-                if (isDataChanged(_value, value))
+                if (IsDataChanged(_value, value))
                 {
                     _value = value;
                     OnPropertyChanged(nameof(Value));
@@ -108,7 +108,7 @@ namespace ManagerHelperLocalDb.ViewModels
         /// <param name="value1">The value1.</param>
         /// <param name="value2">The value2.</param>
         /// <returns></returns>
-        private bool isDataChanged(T value1, T value2)
+        private static bool IsDataChanged(T value1, T value2)
         {
             return !EqualityComparer<T>.Default.Equals(value1, value2);
         }
