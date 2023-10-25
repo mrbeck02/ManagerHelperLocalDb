@@ -4,6 +4,7 @@ using ManagerHelperLocalDb.Data;
 using ManagerHelperLocalDb.Data.Entities;
 using ManagerHelperLocalDb.ViewModels.Support;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -136,6 +137,8 @@ namespace ManagerHelperLocalDb.ViewModels
 
         private void InitializeViewModel()
         {
+            EnsureDatabaseExists();
+
             _developerOptions = CreateDeveloperOptions();
 
             if (_developerOptions.Count > 0)
@@ -143,6 +146,12 @@ namespace ManagerHelperLocalDb.ViewModels
                 _selectedDeveloperOption = _developerOptions[0];
                 _selectedDeveloperOption.IsSelected = true;
             }
+        }
+
+        protected void EnsureDatabaseExists()
+        {
+            using (var context = _contextFactory.CreateDbContext())
+                context.Database.EnsureCreated();
         }
 
         protected ObservableCollection<ComboBoxItemViewModel<Developer>> CreateDeveloperOptions()
